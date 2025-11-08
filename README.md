@@ -9,7 +9,7 @@ Quick usage example
 ```python
 from hflav_zenodo import ZenodoClient
 
-client = ZenodoClient(community="hflav")
+client = ZenodoClient()
 latest = client.get_latest_hflav()
 print(latest["id"], latest.get("metadata", {}).get("title"))
 

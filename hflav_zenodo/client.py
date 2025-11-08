@@ -22,15 +22,17 @@ class ZenodoClient:
     """
 
     DEFAULT_BASE = "https://zenodo.org/api"
+    DEFAULT_COMMUNITY = "hflav"
 
-    def __init__(
-        self,
-        base_url: Optional[str] = None,
-        community: Optional[str] = None,
-        session: Optional[requests.Session] = None,
-    ):
-        self.base_url = base_url.rstrip("/") if base_url else self.DEFAULT_BASE
-        self.community = community
+    def __init__(self, session: Optional[requests.Session] = None):
+        """Create a client fixed to Zenodo and the HFLAV community.
+
+        The client always uses the public Zenodo API at `https://zenodo.org/api`
+        and the `hflav` community. These values are not configurable to keep
+        the client focused on HFLAV data.
+        """
+        self.base_url = self.DEFAULT_BASE
+        self.community = self.DEFAULT_COMMUNITY
         self.session = session or requests.Session()
 
     def _records_url(self) -> str:
@@ -39,7 +41,6 @@ class ZenodoClient:
     def search_records(
         self,
         query: Optional[str] = None,
-        community: Optional[str] = None,
         size: int = 10,
         page: int = 1,
     ) -> Dict[str, Any]:
@@ -56,9 +57,7 @@ class ZenodoClient:
         params: Dict[str, Any] = {"size": size, "page": page, "sort": "mostrecent"}
         if query:
             params["q"] = query
-        comm = community or self.community
-        if comm:
-            params["communities"] = comm
+        params["communities"] = self.community
 
         resp = self.session.get(self._records_url(), params=params, timeout=30)
         resp.raise_for_status()
@@ -74,7 +73,6 @@ class ZenodoClient:
     def get_latest_hflav(
         self,
         query: Optional[str] = None,
-        community: Optional[str] = None,
         size: int = 50,
     ) -> Optional[Dict[str, Any]]:
         """Return the single latest matching record for HFLAV.
@@ -82,7 +80,7 @@ class ZenodoClient:
         It fetches up to `size` matching records and selects the one with the
         newest metadata publication date (falls back to created timestamp).
         """
-        data = self.search_records(query=query, community=community, size=size)
+        data = self.search_records(query=query, size=size)
         hits: List[Dict[str, Any]] = data.get("hits", {}).get("hits", [])
         if not hits:
             return None
