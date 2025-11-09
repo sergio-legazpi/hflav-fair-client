@@ -12,6 +12,11 @@ To obtain the last schema code definition
 
 2. 
 ```
-sudo docker run --rm   -v "$(pwd)":/workdir -w /workdir   quicktype   --lang python   --src-lang schema   --all-properties-optional   -o hflav_z
-enodo/hflav_schema.py   HFLAV.schema
+docker run --rm   -v "$(pwd)":/workdir -w /workdir   quicktype   --lang python   --src-lang schema   --all-properties-optional   -o hflav_zenodo/hflav_schema.py   HFLAV.schema
+```
+
+or with a JSON
+
+```
+docker run --rm -v "$(pwd)":/workdir -w /workdir quicktype --lang python --src-lang json --all-properties-optional -o hflav_zenodo/hflav_schema.py sin2beta_example.json
 ```
