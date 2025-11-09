@@ -1,12 +1,12 @@
 from dotenv import load_dotenv
 from zenodo_client import Zenodo
 
-from hflav_zenodo.averages.averages import Average
+from hflav_zenodo.app import HFLAVApp
 
 
 load_dotenv()
 
-average = Average()
+average = HFLAVApp()
 client = Zenodo()
 path = average.get_json(client=client, record_id=13989054, name="hflav-tau-br-uc.json")
 print("Downloaded file to:", path)
