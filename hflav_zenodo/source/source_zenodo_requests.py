@@ -13,7 +13,7 @@ from datetime import datetime
 from source.source_interface import SourceInterface
 
 
-class ZenodoClient(SourceInterface):
+class SourceZenodoRequest(SourceInterface):
     """Simple Zenodo API client.
 
     Basic contract
@@ -25,50 +25,92 @@ class ZenodoClient(SourceInterface):
 
     DEFAULT_BASE = "https://zenodo.org/api"
     DEFAULT_COMMUNITY = "hflav"
+    CONCEPT_ID_TEMPLATE = 12087575  # Template record for HFLAV data files
 
-    def __init__(self, session: Optional[requests.Session] = None):
-        """Create a client fixed to Zenodo and the HFLAV community.
-
-        The client always uses the public Zenodo API at `https://zenodo.org/api`
-        and the `hflav` community. These values are not configurable to keep
-        the client focused on HFLAV data.
-        """
-        self.base_url = self.DEFAULT_BASE
-        self.community = self.DEFAULT_COMMUNITY
-        self.session = session or requests.Session()
-
-    def _records_url(self) -> str:
-        return f"{self.base_url}/records"
-
-    def get_files_by_name(
+    def get_records_by_name(
         self,
         query: Optional[str] = None,
         size: int = 10,
         page: int = 1,
     ) -> Dict[str, Any]:
-        """Search records on Zenodo.
+        search_url = f"{self.DEFAULT_BASE}/records"
+        params = {
+            "communities": self.DEFAULT_COMMUNITY,
+            "q": query,
+            "size": size,
+            "page": page,
+        }
 
-        Parameters
-        - query: free text query (optional)
-        - community: Zenodo community slug (optional)
-        - size: number of records to fetch (max 100)
-        - page: page number
+        response = requests.get(search_url, params=params, timeout=30)
+        response.raise_for_status()
+        data = response.json()
 
-        Returns JSON-decoded response from the Zenodo API.
-        """
-        params: Dict[str, Any] = {"size": size, "page": page, "sort": "mostrecent"}
-        if query:
-            params["q"] = query
-        params["communities"] = self.community
+        results = []
+        for hit in data.get("hits", {}).get("hits", []):
+            results.append(
+                {
+                    "id": hit.get("id"),
+                    "doi": hit.get("doi"),
+                    "title": hit.get("metadata", {}).get("title"),
+                    "created": hit.get("created"),
+                    "updated": hit.get("updated"),
+                    "links": hit.get("links", {}),
+                }
+            )
 
-        resp = self.session.get(self._records_url(), params=params, timeout=30)
-        resp.raise_for_status()
-        return resp.json()
+        return results
+
+    def get_correct_template_by_date(
+        self, date: Optional[datetime.date] = None
+    ) -> Dict[str, Any]:
+        record_url = f"{self.DEFAULT_BASE}/records/{self.CONCEPT_ID_TEMPLATE}"
+        response = requests.get(record_url, timeout=30)
+        response.raise_for_status()
+        record_data = response.json()
+
+        # Get all versions
+        versions_url = record_data.get("links", {}).get("versions")
+        if not versions_url:
+            raise ValueError(
+                f"No versions link found for record {self.CONCEPT_ID_TEMPLATE}"
+            )
+
+        versions_response = requests.get(versions_url, timeout=30)
+        versions_response.raise_for_status()
+        versions_data = versions_response.json()
+
+        all_versions = []
+        for version in versions_data.get("hits", {}).get("hits", []):
+            version_info = {
+                "id": version.get("id"),
+                "doi": version.get("doi"),
+                "title": version.get("metadata", {}).get("title"),
+                "version": version.get("metadata", {}).get("version"),
+                "created": version.get("created"),
+                "updated": version.get("updated"),
+                "files": [],
+            }
+
+            # Get files for this version
+            files = version.get("files", [])
+            for file in files:
+                version_info["files"].append(
+                    {
+                        "filename": file.get("key"),
+                        "size": file.get("size"),
+                        "checksum": file.get("checksum"),
+                        "download_link": file.get("links", {}).get("self"),
+                    }
+                )
+
+            all_versions.append(version_info)
+
+        return all_versions
 
     def get_record(self, recid: int) -> Dict[str, Any]:
         """Fetch a single record by id (record id as shown in Zenodo URL)."""
-        url = f"{self._records_url()}/{recid}"
-        resp = self.session.get(url, timeout=30)
+        url = f"{self.DEFAULT_BASE}/records/{recid}"
+        resp = requests.get(url, timeout=30)
         resp.raise_for_status()
         return resp.json()
 
@@ -110,7 +152,7 @@ class ZenodoClient(SourceInterface):
         if not url:
             raise ValueError("No download link found for file")
 
-        r = self.session.get(url, stream=True, timeout=60)
+        r = requests.get(url, stream=True, timeout=60)
         r.raise_for_status()
 
         dest_is_dir = dest_path and os.path.isdir(dest_path)

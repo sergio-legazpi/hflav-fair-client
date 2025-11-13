@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+from hflav_zenodo.models.models import File, Record, Template
 
 
 class SourceInterface(ABC):
@@ -14,9 +17,9 @@ class SourceInterface(ABC):
     """
 
     @abstractmethod
-    def get_files_by_name(
+    def get_records_by_name(
         self, query: Optional[str] = None, size: int = 10, page: int = 1
-    ) -> Dict[str, Any]:
+    ) -> List[Record]:
         """Search records and return the JSON-decoded response.
 
         Args:
@@ -29,12 +32,25 @@ class SourceInterface(ABC):
         """
 
     @abstractmethod
+    def get_correct_template_by_date(
+        self, date: Optional[datetime.date] = None
+    ) -> Template:
+        """Search the correct template version to the date given.
+
+        Args:
+                date: date to search the correct template for
+
+        Returns:
+                A dict representing the JSON response from the backend.
+        """
+
+    @abstractmethod
     def get_file_by_id(
         self,
         id: int,
         filename: Optional[str] = None,
         dest_path: Optional[str] = None,
-    ) -> str:
+    ) -> File:
         """Download a file referenced by a record and return the saved path.
 
         Args:
