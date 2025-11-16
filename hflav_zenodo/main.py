@@ -2,9 +2,6 @@ from datetime import datetime
 from dotenv import load_dotenv
 from zenodo_client import Zenodo
 
-from hflav_zenodo.app import HFLAVApp
-
-
 load_dotenv()
 
 from hflav_zenodo.services.services import Services
@@ -14,7 +11,7 @@ services = Services(source=SourceZenodoRequest())
 
 services.search_records_by_name(query="tau lifetime", size=5, page=1)
 DynamicClass = services.load_data_file(
-    record_id=13989054, filename="hflav-tau-lifetime.json"
+    record_id=13989054, filename="hflav-tau-mass.json"
 )
 print(DynamicClass)
 # average = HFLAVApp()

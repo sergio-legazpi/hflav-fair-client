@@ -42,7 +42,9 @@ class Services:
             id=record_id, filename=filename, dest_path=dest_path
         )
 
-        print(f"Files downloaded: Template at {template_path}, Record at {file_path}")
+        print(
+            f"Files downloaded: Template at {template_path}, Data file at {file_path}"
+        )
         dynamic_model = DynamicConversor.from_json(template_path)
         ExperimentData = dynamic_model["main"]
 
