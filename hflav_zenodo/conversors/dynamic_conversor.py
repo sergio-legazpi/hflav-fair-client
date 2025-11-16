@@ -8,6 +8,30 @@ from pydantic import BaseModel, create_model
 class DynamicConversor(BaseModel):
     """Base class to create Pydantic models dynamically from JSON templates"""
 
+    def _get_data_from_dict_file_or_string(
+        self, input_data: Union[str, bytes, os.PathLike, Dict]
+    ) -> Dict:
+        """
+        Load data from a dictionary, JSON string, or file path
+
+        Args:
+            input_data: JSON string, file path, or dict with example data
+        Returns:
+            Dictionary with loaded data
+        """
+        if isinstance(input_data, dict):
+            # Already a dictionary
+            return input_data
+        elif isinstance(input_data, (str, bytes, os.PathLike)) and os.path.exists(
+            input_data
+        ):
+            # Is a file path
+            with open(input_data, "r", encoding="utf-8") as file:
+                return json.load(file)
+        else:
+            # Is a JSON string
+            return json.loads(input_data)
+
     @classmethod
     def from_json(
         cls, json_template: Union[str, bytes, os.PathLike, Dict]
@@ -21,18 +45,7 @@ class DynamicConversor(BaseModel):
         Returns:
             Dictionary with model names and their classes
         """
-        if isinstance(json_template, dict):
-            # Already a dictionary
-            example_data = json_template
-        elif isinstance(json_template, (str, bytes, os.PathLike)) and os.path.exists(
-            json_template
-        ):
-            # Is a file path
-            with open(json_template, "r", encoding="utf-8") as file:
-                example_data = json.load(file)
-        else:
-            # Is a JSON string
-            example_data = json.loads(json_template)
+        example_data = cls._get_data_from_dict_file_or_string(cls, json_template)
 
         models = {}
 
@@ -105,7 +118,9 @@ class DynamicConversor(BaseModel):
             return Any
 
     @classmethod
-    def create_instance(cls, model: Type[BaseModel], file_path: str) -> BaseModel:
+    def create_instance(
+        cls, model: Type[BaseModel], data: Union[Dict, str, bytes, os.PathLike]
+    ) -> BaseModel:
         """
         Create an instance of the model with real data
         Args:
@@ -115,6 +130,5 @@ class DynamicConversor(BaseModel):
         Returns:
             Validated model instance
         """
-        with open(file_path, "r", encoding="utf-8") as file:
-            loaded_data = json.load(file)
+        loaded_data = cls._get_data_from_dict_file_or_string(cls, data)
         return model(**loaded_data)
