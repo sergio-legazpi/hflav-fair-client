@@ -1,3 +1,4 @@
+import json
 from typing import Optional, List, Type
 
 from pydantic import BaseModel
@@ -49,4 +50,7 @@ class Services:
         ExperimentData = dynamic_model["main"]
 
         print(f"Loading data from file {file_path} into model...")
-        return DynamicConversor.create_instance(ExperimentData, file_path)
+        dynamic_class = DynamicConversor.create_instance(ExperimentData, file_path)
+        print("Data loaded successfully. This is the content:")
+        print(json.dumps(dynamic_class.model_dump(), indent=4, ensure_ascii=False))
+        return dynamic_class

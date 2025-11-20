@@ -10,10 +10,9 @@ from source.source_zenodo_requests import SourceZenodoRequest
 services = Services(source=SourceZenodoRequest())
 
 services.search_records_by_name(query="tau lifetime", size=5, page=1)
-DynamicClass = services.load_data_file(
+dynamic_class = services.load_data_file(
     record_id=13989054, filename="hflav-tau-mass.json"
 )
-print(DynamicClass)
 # average = HFLAVApp()
 # client = Zenodo()
 # path = average.get_json(
