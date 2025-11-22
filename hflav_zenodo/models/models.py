@@ -16,6 +16,12 @@ class File(BaseModel):
             }
         return data
 
+    def __str__(self):
+        return f"""File(
+                name='{self.name}', 
+                download_url='{self.download_url}'
+            )"""
+
 
 class Record(BaseModel):
     id: int
@@ -46,6 +52,21 @@ class Record(BaseModel):
             if f.name == filename:
                 return f
         raise ValueError(f"File with name {filename} not found in record {self.id}")
+
+    def __str__(self):
+        files_str = ",\n            ".join(
+            f"{i+1}: {str(f)}" for i, f in enumerate(self.files)
+        )
+        return f"""Record(
+        id={self.id},
+        title='{self.title}',
+        doi='{self.doi}',
+        created={self.created},
+        updated={self.updated},
+        files=[
+            {files_str}
+        ]
+    )"""
 
 
 class Template(BaseModel):

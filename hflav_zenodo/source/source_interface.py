@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
-from hflav_zenodo.models.models import File, Record, Template
+from hflav_zenodo.models.models import Record, Template
 
 
 class SourceInterface(ABC):
@@ -29,6 +29,9 @@ class SourceInterface(ABC):
 
         Returns:
                 A list of records.
+
+        Raises:
+                DataAccessException: If the request to download the file fails.
         """
 
     @abstractmethod
@@ -40,6 +43,10 @@ class SourceInterface(ABC):
 
         Returns:
                 A Template instance.
+
+        Raises:
+                DataAccessException: If the request to get template versions fails.
+                DataNotFoundException: If no template versions found or versions.
         """
 
     @abstractmethod
@@ -50,22 +57,31 @@ class SourceInterface(ABC):
 
         Returns:
                 A Record instance.
+
+        Raises:
+                ValueError: If no id is given.
+                DataAccessException: If the request to download the file fails.
         """
 
     @abstractmethod
     def download_file_by_id_and_filename(
         self,
         id: int,
-        filename: Optional[str] = None,
+        filename: str,
         dest_path: Optional[str] = None,
     ) -> str:
         """Download a file referenced by a record and return the saved path.
 
         Args:
                 id: integer id of the record
-                filename: optional filename/key to select a specific file in the record
+                filename: filename/key to select a specific file in the record
                 dest_path: optional destination directory or full path
 
         Returns:
                 The filesystem path to the saved file.
+
+        Raises:
+                ValueError: If no id or filename is given.
+                DataAccessException: If the request to download the file fails.
+                DataNotFoundException: If no download link is found for the file.
         """

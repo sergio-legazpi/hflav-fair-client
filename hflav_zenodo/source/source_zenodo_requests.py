@@ -10,6 +10,10 @@ import requests
 import os
 from datetime import datetime
 
+from hflav_zenodo.exceptions.source_exceptions import (
+    DataAccessException,
+    DataNotFoundException,
+)
 from hflav_zenodo.models.models import File, Record, Template
 from hflav_zenodo.source.source_interface import SourceInterface
 
@@ -40,10 +44,14 @@ class SourceZenodoRequest(SourceInterface):
             "q": query,
             "size": size,
             "page": page,
+            "sort": "newest",
         }
 
         response = requests.get(search_url, params=params, timeout=30)
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except requests.HTTPError as e:
+            raise DataAccessException("Failed to get records by name", details=str(e))
         data = response.json()
 
         results = []
@@ -55,13 +63,16 @@ class SourceZenodoRequest(SourceInterface):
     def _get_all_template_versions(self) -> List[Template]:
         record_url = f"{self.DEFAULT_BASE}/records/{self.CONCEPT_ID_TEMPLATE}"
         response = requests.get(record_url, timeout=30)
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except requests.HTTPError as e:
+            raise DataAccessException("Failed to get template versions", details=str(e))
         record_data = response.json()
 
         # Get all versions
         versions_url = record_data.get("links", {}).get("versions")
         if not versions_url:
-            raise ValueError(
+            raise DataNotFoundException(
                 f"No versions link found for record {self.CONCEPT_ID_TEMPLATE}"
             )
 
@@ -88,44 +99,45 @@ class SourceZenodoRequest(SourceInterface):
                 t for t in templates if t.created.timestamp() <= date.timestamp()
             ]
             if not valid_templates:
-                raise ValueError(f"No template versions found before date {date}")
+                raise DataNotFoundException(
+                    f"No template versions found before date {date}"
+                )
             correct_template = max(valid_templates, key=lambda t: t.created)
             return correct_template
 
     def get_record(self, recid: int) -> Record:
-        """Fetch a single record by id (record id as shown in Zenodo URL)."""
+        if not recid:
+            raise ValueError("id must be an integer")
         url = f"{self.DEFAULT_BASE}/records/{recid}"
         resp = requests.get(url, timeout=30)
-        resp.raise_for_status()
+        try:
+            resp.raise_for_status()
+        except requests.HTTPError as e:
+            raise DataAccessException("Failed to get record", details=str(e))
         data = resp.json()
         return Record(**data)
 
     def download_file_by_id_and_filename(
         self,
         id: int,
-        filename: Optional[str] = None,
+        filename: str,
         dest_path: Optional[str] = None,
     ) -> str:
-        """Download a file from a record.
-
-        - record_or_id: either the record JSON (dict) or the record id (int)
-        - filename: if provided, choose that file from the record.files list
-        - dest_path: directory or full filename to save; if None uses cwd
-
-        Returns the path to the saved file.
-        """
-        if isinstance(id, int):
-            record = self.get_record(id)
-        else:
-            raise ValueError("record_or_id must be an int or a record dict")
-
-        chosen = record.get_file_by_name(filename) if filename else record.files[0]
+        if not id:
+            raise ValueError("id must be an integer")
+        record = self.get_record(id)
+        if not filename:
+            raise ValueError("filename must be a string")
+        chosen = record.get_file_by_name(filename)
         url = chosen.download_url
         if not url:
-            raise ValueError("No download link found for file")
+            raise DataNotFoundException("No download link found for file")
 
         r = requests.get(url, stream=True, timeout=60)
-        r.raise_for_status()
+        try:
+            r.raise_for_status()
+        except requests.HTTPError as e:
+            raise DataAccessException("Failed to download file", details=str(e))
 
         dest_is_dir = dest_path and os.path.isdir(dest_path)
         if dest_path is None or dest_is_dir:
