@@ -79,14 +79,12 @@ class Services:
         print(
             f"Files downloaded: Template at {template_path}, Data file at {file_path}"
         )
-        dynamic_model = DynamicConversor.from_json(template_path)
-        ExperimentData = dynamic_model["main"]
 
         print(f"Loading data from file {file_path} into model...")
-        dynamic_class = DynamicConversor.create_instance(ExperimentData, file_path)
+        dynamic_class = DynamicConversor.generate_instance_from_template_and_data(
+            template_path, file_path
+        )
 
         print("Data loaded successfully. This is the content:")
-        DataVisualizer.print_summary(dynamic_class, title=record.title)
-        DataVisualizer.print_simple(dynamic_class, title=record.title)
-
+        DataVisualizer.print_json_data(dynamic_class)
         return dynamic_class

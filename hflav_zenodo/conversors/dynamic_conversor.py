@@ -1,8 +1,10 @@
 import json
 import os
-from typing import Any, Dict, Type, Union, List, Optional
+from typing import Dict, Type, Union, Optional
 
-from pydantic import BaseModel, create_model
+from genson import SchemaBuilder
+from pydantic import BaseModel, ConfigDict, Field, create_model
+from hflav_zenodo.processing.data_visualizer import DataVisualizer
 
 
 class DynamicConversor(BaseModel):
@@ -32,145 +34,58 @@ class DynamicConversor(BaseModel):
             # Is a JSON string
             return json.loads(input_data)
 
-    @classmethod
-    def from_json(
-        cls, json_template: Union[str, bytes, os.PathLike, Dict]
-    ) -> Dict[str, Type[BaseModel]]:
-        """
-        Create Pydantic models from a JSON template with ALL fields as Union and Optional
+    def _generate_json_schema(cls, file_path: str):
+        builder = SchemaBuilder()
 
-        Args:
-            json_template: JSON string, file path, or dict with example data
+        data = cls._get_data_from_dict_file_or_string(cls, file_path)
 
-        Returns:
-            Dictionary with model names and their classes
-        """
-        example_data = cls._get_data_from_dict_file_or_string(cls, json_template)
+        builder.add_object(data)
+        schema = builder.to_schema()
 
-        models = {}
+        schema["$schema"] = "http://json-schema.org/draft-07/schema#"
 
-        def _create_model(name: str, data: Any) -> Type[BaseModel]:
-            """
-            Recursive function to create models with all fields as Union and Optional
-            """
-            if not isinstance(data, dict):
-                # For non-dict data, create a simple model with Union and Optional
-                field_types = cls._infer_types(data)
-                union_type = (
-                    Union[tuple(field_types)]
-                    if len(field_types) > 1
-                    else field_types[0]
-                )
-                return create_model(name, value=(Optional[union_type], None))
-
-            fields = {}
-
-            for key, value in data.items():
-                field_name = key
-
-                if isinstance(value, dict):
-                    # Create sub-model recursively
-                    submodel_name = f"{name}_{key}"
-                    nested_model = _create_model(submodel_name, value)
-                    field_types = [nested_model, type(None)]
-                    fields[field_name] = (Optional[Union[tuple(field_types)]], None)
-                elif isinstance(value, list) and value:
-                    # Handle lists - collect all types from all items
-                    item_types = set()
-                    for item in value:
-                        if isinstance(item, dict):
-                            # List of objects
-                            submodel_name = f"{name}_{key}_item"
-                            model_item = _create_model(submodel_name, item)
-                            item_types.add(model_item)
-                        else:
-                            # Collect all primitive types found in the list
-                            primitive_types = cls._infer_types(item)
-                            item_types.update(primitive_types)
-
-                    if item_types:
-                        # Create Union type for list items
-                        list_item_type = (
-                            Union[tuple(item_types)]
-                            if len(item_types) > 1
-                            else next(iter(item_types))
-                        )
-                        list_type = List[list_item_type]  # type: ignore
-                        fields[field_name] = (Optional[list_type], None)
-                    else:
-                        # Empty list or no types found
-                        fields[field_name] = (Optional[List[Any]], None)
-                else:
-                    # Primitive type - all fields are Union and Optional
-                    field_types = cls._infer_types(value)
-                    union_type = (
-                        Union[tuple(field_types)]
-                        if len(field_types) > 1
-                        else field_types[0]
-                    )
-                    fields[field_name] = (Optional[union_type], None)
-
-            return create_model(name, **fields)
-
-        # Create main model
-        main_model_name = "ExperimentData"
-        models["main"] = _create_model(main_model_name, example_data)
-
-        return models
+        return schema
 
     @classmethod
-    def _infer_types(cls, value: Any) -> List[Type]:
-        """Infer all possible types for a value, collecting multiple types"""
-        types_found = set()
+    def generate_instance_from_template_and_data(
+        cls, template_path: str, data_path: str
+    ) -> Type[BaseModel]:
+        schema = cls._generate_json_schema(
+            cls,
+            template_path,
+        )
+        print("Template JSON Schema:")
+        DataVisualizer.print_schema(schema)
 
-        def _collect_types(val: Any):
-            if val is None:
-                types_found.add(type(None))
-            elif isinstance(val, bool):
-                types_found.add(bool)
-            elif isinstance(val, int):
-                types_found.add(int)
-            elif isinstance(val, float):
-                types_found.add(float)
-            elif isinstance(val, str):
-                types_found.add(str)
-            elif isinstance(val, list):
-                types_found.add(list)
-                # Recursively collect types from list items
-                for item in val:
-                    _collect_types(item)
-            elif isinstance(val, dict):
-                types_found.add(dict)
-                # Recursively collect types from dict values
-                for dict_val in val.values():
-                    _collect_types(dict_val)
+        field_definitions = {}
+
+        for prop_name, prop_schema in schema.get("properties", {}).items():
+            field_type = prop_schema.get("type")
+            required = prop_name in schema.get("required", [])
+
+            type_mapping = {
+                "string": str,
+                "integer": int,
+                "number": float,
+                "boolean": bool,
+                "array": list,
+                "object": dict,
+            }
+
+            python_type = type_mapping.get(field_type, str)
+            if not required:
+                python_type = Optional[python_type]
+                default = None
             else:
-                types_found.add(type(val))
+                default = ...
+            field_definitions[prop_name] = (python_type, Field(default))
 
-        _collect_types(value)
+        TemplateModel = create_model(
+            schema.get("title", "TemplateModel"),
+            __config__=ConfigDict(strict=True),
+            **field_definitions
+        )
+        data_dict = cls._get_data_from_dict_file_or_string(cls, data_path)
+        instance = TemplateModel(**data_dict)
 
-        # Convert to list and ensure type(None) is included for Optional compatibility
-        result_types = list(types_found)
-
-        # If we only found basic types and no None, ensure Optional can work
-        if type(None) not in result_types:
-            # We'll let the caller handle adding None for Optional
-            pass
-
-        return result_types if result_types else [Any]
-
-    @classmethod
-    def create_instance(
-        cls, model: Type[BaseModel], data: Union[Dict, str, bytes, os.PathLike]
-    ) -> BaseModel:
-        """
-        Create an instance of the model with real data
-        Args:
-            model: Pydantic model class
-            data: Dictionary with real data
-
-        Returns:
-            Validated model instance
-        """
-        loaded_data = cls._get_data_from_dict_file_or_string(cls, data)
-        return model(**loaded_data)
+        return instance

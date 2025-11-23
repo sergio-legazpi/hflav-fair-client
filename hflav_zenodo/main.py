@@ -1,9 +1,3 @@
-from datetime import datetime
-from dotenv import load_dotenv
-from zenodo_client import Zenodo
-
-load_dotenv()
-
 from hflav_zenodo.services.services import Services
 from source.source_zenodo_requests import SourceZenodoRequest
 
