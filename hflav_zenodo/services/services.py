@@ -2,6 +2,7 @@ import json
 from typing import Optional, List, Type
 
 from pydantic import BaseModel
+from hflav_zenodo.conversors.conversor_interface import ConversorInterface
 from hflav_zenodo.processing.data_visualizer import DataVisualizer
 from hflav_zenodo.conversors.dynamic_conversor import DynamicConversor
 from hflav_zenodo.exceptions.source_exceptions import DataAccessException
@@ -10,8 +11,9 @@ from hflav_zenodo.source.source_interface import SourceInterface
 
 
 class Services:
-    def __init__(self, source: SourceInterface) -> None:
+    def __init__(self, source: SourceInterface, conversor: ConversorInterface) -> None:
         self._source = source
+        self._conversor = conversor
 
     def search_records_by_name(
         self, query: Optional[str] = None, size: int = 10, page: int = 1
@@ -81,7 +83,7 @@ class Services:
         )
 
         print(f"Loading data from file {file_path} into model...")
-        dynamic_class = DynamicConversor.generate_instance_from_template_and_data(
+        dynamic_class = self._conversor.generate_instance_from_template_and_data(
             template_path, file_path
         )
 

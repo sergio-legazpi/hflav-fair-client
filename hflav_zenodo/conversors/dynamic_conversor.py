@@ -3,13 +3,14 @@ from types import SimpleNamespace
 
 from genson import SchemaBuilder
 import jsonschema
+from hflav_zenodo.conversors.conversor_interface import ConversorInterface
+from hflav_zenodo.exceptions.conversor_exceptions import StructureException
 from hflav_zenodo.processing.data_visualizer import DataVisualizer
 
 
-class DynamicConversor:
-    """Base class to create models dynamically from JSON templates"""
+class DynamicConversor(ConversorInterface):
 
-    def _generate_json_schema(cls, file_path: str):
+    def _generate_json_schema(self, file_path: str):
         builder = SchemaBuilder()
 
         with open(file_path, "r", encoding="utf-8") as file:
@@ -22,12 +23,12 @@ class DynamicConversor:
 
         return schema
 
-    @classmethod
     def generate_instance_from_template_and_data(
-        cls, template_path: str, data_path: str
+        self, template_path: str, data_path: str
     ) -> SimpleNamespace:
-        schema = cls._generate_json_schema(
-            cls,
+        if not template_path or not data_path:
+            raise ValueError("Template path and data path must be provided.")
+        schema = self._generate_json_schema(
             template_path,
         )
         print("Template JSON Schema:")
@@ -35,6 +36,9 @@ class DynamicConversor:
 
         with open(data_path, "r", encoding="utf-8") as file:
             data_dict = json.load(file)
-        jsonschema.validate(instance=data_dict, schema=schema)
+        try:
+            jsonschema.validate(instance=data_dict, schema=schema)
+        except jsonschema.ValidationError as e:
+            raise StructureException(details=str(e))
 
         return SimpleNamespace(**data_dict)
