@@ -23,6 +23,16 @@ class DynamicConversor(ConversorInterface):
         else:
             return obj
 
+    def _avoid_extra_fields(self, obj):
+        if isinstance(obj, dict):
+            if obj.get("type") == "object":
+                obj["additionalProperties"] = False
+            for v in obj.values():
+                self._avoid_extra_fields(v)
+        elif isinstance(obj, list):
+            for item in obj:
+                self._avoid_extra_fields(item)
+
     def _generate_json_schema(self, file_path: str):
         builder = SchemaBuilder()
 
@@ -44,6 +54,7 @@ class DynamicConversor(ConversorInterface):
         schema = self._generate_json_schema(
             template_path,
         )
+        self._avoid_extra_fields(schema)
         logger.info("Template JSON Schema:")
         self._visualizer.print_schema(schema)
 
