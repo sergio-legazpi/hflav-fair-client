@@ -6,9 +6,15 @@ import jsonschema
 from hflav_zenodo.conversors.conversor_interface import ConversorInterface
 from hflav_zenodo.exceptions.conversor_exceptions import StructureException
 from hflav_zenodo.processing.data_visualizer import DataVisualizer
+from hflav_zenodo.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class DynamicConversor(ConversorInterface):
+
+    def __init__(self):
+        self._visualizer = DataVisualizer()
 
     def _generate_json_schema(self, file_path: str):
         builder = SchemaBuilder()
@@ -31,8 +37,8 @@ class DynamicConversor(ConversorInterface):
         schema = self._generate_json_schema(
             template_path,
         )
-        print("Template JSON Schema:")
-        DataVisualizer.print_schema(schema)
+        logger.info("Template JSON Schema:")
+        self._visualizer.print_schema(schema)
 
         with open(data_path, "r", encoding="utf-8") as file:
             data_dict = json.load(file)

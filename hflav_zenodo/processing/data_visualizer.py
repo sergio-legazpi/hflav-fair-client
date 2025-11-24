@@ -1,19 +1,15 @@
 import json
 from types import SimpleNamespace
-from typing import Any, Type
 
-from pydantic import BaseModel
-from rich.table import Table
-from rich import print as rprint, print_json
+from rich import print_json
+
+from hflav_zenodo.processing.visualizer_interface import VisualizerInterface
 
 
-class DataVisualizer:
-    """Class to visualize Pydantic models in a simplified and visual way"""
+class DataVisualizer(VisualizerInterface):
 
-    @staticmethod
-    def print_schema(schema: dict):
+    def print_schema(self, schema: dict):
         print_json(json.dumps(schema))
 
-    @staticmethod
-    def print_json_data(data: SimpleNamespace):
+    def print_json_data(self, data: SimpleNamespace):
         print_json(json.dumps(data.__dict__, indent=4))
