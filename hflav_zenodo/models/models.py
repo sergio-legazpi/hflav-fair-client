@@ -128,22 +128,40 @@ class Template(ZenodoElement):
     created: datetime
     updated: datetime
     version: str
-    jsons: List[File]
+    jsontemplate: Optional[ZenodoElement] = None
+    jsonschema: Optional[ZenodoElement] = None
 
     @model_validator(mode="before")
     def transform_json_data(cls, values: Dict[str, Any]) -> Dict[str, Any]:
         if isinstance(values, dict):
+            jsontemplate = next(
+                (
+                    item
+                    for item in values.get("files", [])
+                    if item["key"].endswith(".json")
+                ),
+                None,
+            )
+            if jsontemplate:
+                jsontemplate = File(**jsontemplate)
+            jsonschema = next(
+                (
+                    item
+                    for item in values.get("files", [])
+                    if item["key"].endswith(".schema")
+                ),
+                None,
+            )
+            if jsonschema:
+                jsonschema = File(**jsonschema)
             transformed = {
                 "rec_id": values.get("id"),
                 "title": values.get("metadata", {}).get("title"),
                 "created": values.get("created"),
                 "updated": values.get("updated"),
                 "version": values.get("metadata", {}).get("version"),
-                "jsons": [
-                    File(**item)
-                    for item in values.get("files", [])
-                    if item["key"].endswith(".json")
-                ],
+                "jsontemplate": jsontemplate,
+                "jsonschema": jsonschema,
             }
             return transformed
         return values

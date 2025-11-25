@@ -3,6 +3,9 @@ from typing import Optional, List
 
 from pydantic import BaseModel
 from hflav_zenodo.conversors.conversor_interface import ConversorInterface
+from hflav_zenodo.conversors.gitlab_schema_handler import GitlabSchemaHandler
+from hflav_zenodo.conversors.template_schema_handler import TemplateSchemaHandler
+from hflav_zenodo.conversors.zenodo_schema_handler import ZenodoSchemaHandler
 from hflav_zenodo.processing.data_visualizer import DataVisualizer
 from hflav_zenodo.conversors.dynamic_conversor import DynamicConversor
 from hflav_zenodo.exceptions.source_exceptions import DataAccessException
@@ -80,25 +83,24 @@ class Services:
         logger.info(
             f"Template found: {template.title}, with version {template.version}"
         )
-        logger.info(f"Downloading template file {template.jsons[0].name}...")
-        template_path = self._source.download_file_by_id_and_filename(
-            id=template.rec_id, filename=template.jsons[0].name
+        zenodo_schema_handler = ZenodoSchemaHandler(
+            source=self._source, conversor=self._conversor, visualizer=self._visualizer
+        )
+        gitlab_schema_handler = GitlabSchemaHandler(
+            source=self._source, conversor=self._conversor, visualizer=self._visualizer
+        )
+        template_schema_handler = TemplateSchemaHandler(
+            source=self._source, conversor=self._conversor, visualizer=self._visualizer
+        )
+
+        zenodo_schema_handler.set_next(gitlab_schema_handler).set_next(
+            template_schema_handler
         )
 
         logger.info(f"Downloading record file {filename}...")
         file_path = self._source.download_file_by_id_and_filename(
             id=record_id, filename=filename, dest_path=dest_path
         )
+        logger.info(f"Downloaded record file {filename} to {file_path}")
 
-        logger.info(
-            f"Files downloaded: Template at {template_path}, Data file at {file_path}"
-        )
-
-        logger.info(f"Loading data from file {file_path} into model...")
-        dynamic_class = self._conversor.generate_instance_from_template_and_data(
-            template_path, file_path
-        )
-
-        logger.info("Data loaded successfully. This is the content:")
-        self._visualizer.print_json_data(dynamic_class)
-        return dynamic_class
+        return zenodo_schema_handler.handle(template, file_path)
