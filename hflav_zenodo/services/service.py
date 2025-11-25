@@ -1,32 +1,33 @@
 from types import SimpleNamespace
 from typing import Optional, List
 
-from pydantic import BaseModel
+from dependency_injector.wiring import inject, Provide
+
 from hflav_zenodo.conversors.conversor_interface import ConversorInterface
 from hflav_zenodo.conversors.gitlab_schema_handler import GitlabSchemaHandler
 from hflav_zenodo.conversors.template_schema_handler import TemplateSchemaHandler
 from hflav_zenodo.conversors.zenodo_schema_handler import ZenodoSchemaHandler
-from hflav_zenodo.processing.data_visualizer import DataVisualizer
-from hflav_zenodo.conversors.dynamic_conversor import DynamicConversor
 from hflav_zenodo.exceptions.source_exceptions import DataAccessException
 from hflav_zenodo.models.models import Record
 from hflav_zenodo.processing.visualizer_interface import VisualizerInterface
 from hflav_zenodo.source.source_interface import SourceInterface
 from hflav_zenodo.logger import get_logger
+from hflav_zenodo.services.service_interface import ServiceInterface
 
 logger = get_logger(__name__)
 
 
-class Services:
+class Service(ServiceInterface):
+    @inject
     def __init__(
         self,
-        source: SourceInterface,
-        conversor: ConversorInterface,
-        visualizer: VisualizerInterface,
+        source: SourceInterface = Provide["source"],
+        conversor: ConversorInterface = Provide["conversor"],
+        handler_schema_chain=Provide["handler_schema_chain"],
     ) -> None:
         self._source = source
         self._conversor = conversor
-        self._visualizer = visualizer
+        self._handler_schema_chain = handler_schema_chain
 
     def search_records_by_name(
         self, query: Optional[str] = None, size: int = 10, page: int = 1
@@ -90,20 +91,4 @@ class Services:
         )
         logger.info(f"Downloaded record file {filename} to {file_path}")
 
-        logger.info("Setting up the chain of responsibility for schema handling...")
-        zenodo_schema_handler = ZenodoSchemaHandler(
-            source=self._source, conversor=self._conversor, visualizer=self._visualizer
-        )
-        gitlab_schema_handler = GitlabSchemaHandler(
-            source=self._source, conversor=self._conversor, visualizer=self._visualizer
-        )
-        template_schema_handler = TemplateSchemaHandler(
-            source=self._source, conversor=self._conversor, visualizer=self._visualizer
-        )
-
-        zenodo_schema_handler.set_next(gitlab_schema_handler).set_next(
-            template_schema_handler
-        )
-        logger.info("Chain of responsibility for schema handling set up successfully.")
-
-        return zenodo_schema_handler.handle(template, file_path)
+        return self._handler_schema_chain.handle(template, file_path)

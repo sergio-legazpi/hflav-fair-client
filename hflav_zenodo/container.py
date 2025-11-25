@@ -1,0 +1,56 @@
+from dependency_injector import containers, providers
+
+from hflav_zenodo.conversors.template_schema_handler import TemplateSchemaHandler
+from hflav_zenodo.conversors.dynamic_conversor import DynamicConversor
+from hflav_zenodo.conversors.gitlab_schema_handler import GitlabSchemaHandler
+from hflav_zenodo.conversors.zenodo_schema_handler import ZenodoSchemaHandler
+from hflav_zenodo.processing.data_visualizer import DataVisualizer
+from hflav_zenodo.services.service import (
+    Service,
+)
+from hflav_zenodo.source.source_zenodo_requests import SourceZenodoRequest
+
+
+class Container(containers.DeclarativeContainer):
+    wiring_config = containers.WiringConfiguration(
+        modules=[
+            "hflav_zenodo.conversors.conversor_handler",
+            "hflav_zenodo.conversors.zenodo_schema_handler",
+            "hflav_zenodo.conversors.gitlab_schema_handler",
+            "hflav_zenodo.services.service",
+            "hflav_zenodo.conversors.dynamic_conversor",
+        ]
+    )
+
+    source = providers.Singleton(SourceZenodoRequest)
+    conversor = providers.Singleton(DynamicConversor)
+    visualizer = providers.Singleton(DataVisualizer)
+
+    zenodo_schema_handler = providers.Factory(
+        ZenodoSchemaHandler, source=source, conversor=conversor, visualizer=visualizer
+    )
+
+    gitlab_schema_handler = providers.Factory(
+        GitlabSchemaHandler, source=source, conversor=conversor, visualizer=visualizer
+    )
+
+    template_schema_handler = providers.Factory(
+        TemplateSchemaHandler, source=source, conversor=conversor, visualizer=visualizer
+    )
+    handler_schema_chain = providers.Callable(
+        lambda zh, gh, th: (
+            zh.set_next(gh),
+            gh.set_next(th),
+            zh,
+        )[-1],
+        zh=zenodo_schema_handler,
+        gh=gitlab_schema_handler,
+        th=template_schema_handler,
+    )
+
+    service = providers.Factory(
+        Service,
+        source=source,
+        conversor=conversor,
+        handler_schema_chain=handler_schema_chain,
+    )

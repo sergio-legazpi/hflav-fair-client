@@ -7,13 +7,16 @@ from hflav_zenodo.conversors.conversor_interface import ConversorInterface
 from hflav_zenodo.exceptions.conversor_exceptions import StructureException
 from hflav_zenodo.processing.data_visualizer import DataVisualizer
 from hflav_zenodo.logger import get_logger
+from dependency_injector.wiring import inject, Provide
+
 
 logger = get_logger(__name__)
 
 
 class DynamicConversor(ConversorInterface):
-    def __init__(self):
-        self._visualizer = DataVisualizer()
+    @inject
+    def __init__(self, visualizer: DataVisualizer = Provide["visualizer"]):
+        self._visualizer = visualizer
 
     def _to_namespace(self, obj):
         if isinstance(obj, dict):

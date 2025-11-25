@@ -1,15 +1,10 @@
-from hflav_zenodo.conversors.dynamic_conversor import DynamicConversor
-from hflav_zenodo.processing.data_visualizer import DataVisualizer
-from hflav_zenodo.services.services import Services
-from source.source_zenodo_requests import SourceZenodoRequest
+from hflav_zenodo.container import Container
 
-services = Services(
-    source=SourceZenodoRequest(),
-    conversor=DynamicConversor(),
-    visualizer=DataVisualizer(),
-)
+container = Container()
 
-dynamic_class = services.search_and_load_data_file(query="HFLAV")
+service = container.service()
+
+dynamic_class = service.search_and_load_data_file(query="HFLAV")
 # services.search_records_by_name(query="HFLAV", size=5, page=1)
 # dynamic_class = services.load_data_file(
 #     record_id=11157260, filename="sin2beta_example.json"
