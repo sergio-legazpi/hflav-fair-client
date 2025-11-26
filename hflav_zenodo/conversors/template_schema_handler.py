@@ -16,7 +16,7 @@ class TemplateSchemaHandler(ConversorHandler):
     """
 
     def handle(self, template: Template, data_path: str) -> object:
-        logger.info("TemplateSchemaHandler: Handling the request...")
+        logger.info("Handling the request...")
         if not self.can_handle(template, data_path):
             raise Exception("No handler available for this template and data path")
         logger.info(f"Downloading template file {template.jsontemplate.name}...")

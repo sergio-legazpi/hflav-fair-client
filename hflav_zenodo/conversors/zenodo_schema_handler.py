@@ -18,11 +18,9 @@ class ZenodoSchemaHandler(ConversorHandler):
     """
 
     def handle(self, template: Template, data_path: str) -> SimpleNamespace:
-        logger.info("ZenodoSchemaHandler: Handling the request...")
+        logger.info("Handling the request...")
         if not self.can_handle(template, data_path):
-            logger.info(
-                "ZenodoSchemaHandler: Cannot handle the request, passing to next handler..."
-            )
+            logger.info("Cannot handle the request, passing to next handler...")
             return self._next_handler.handle(template, data_path)
         logger.info(f"Downloading JSON schema file {template.jsonschema.name}...")
         schema_path = self._source.download_file_by_id_and_filename(
@@ -31,6 +29,7 @@ class ZenodoSchemaHandler(ConversorHandler):
         logger.info(f"JSON schema downloaded: Schema at {schema_path}")
         with open(schema_path, "r", encoding="utf-8") as file:
             schema = json.load(file)
+        logger.info(f"Loading data from file {data_path} into model...")
 
         dynamic_class = self._conversor.generate_instance_from_schema_and_data(
             schema, data_path

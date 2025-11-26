@@ -8,6 +8,7 @@ from hflav_zenodo.processing.data_visualizer import DataVisualizer
 from hflav_zenodo.services.service import (
     Service,
 )
+from hflav_zenodo.source.source_gitlab_client import SourceGitlabClient
 from hflav_zenodo.source.source_zenodo_requests import SourceZenodoRequest
 
 
@@ -23,6 +24,7 @@ class Container(containers.DeclarativeContainer):
     )
 
     source = providers.Singleton(SourceZenodoRequest)
+    gitlab_source = providers.Singleton(SourceGitlabClient)
     conversor = providers.Singleton(DynamicConversor)
     visualizer = providers.Singleton(DataVisualizer)
 

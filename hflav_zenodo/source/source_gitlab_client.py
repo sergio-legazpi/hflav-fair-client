@@ -1,5 +1,5 @@
 import json
-from gitlab import Gitlab
+from gitlab import Gitlab, GitlabGetError
 
 from hflav_zenodo.source.source_gitlab_interface import SourceGitlabInterface
 
@@ -17,16 +17,20 @@ class SourceGitlabClient(SourceGitlabInterface):
             content = content.decode("utf-8")
         return content
 
-    def _get_tag(self, tag_name):
+    def _get_tag_name(self, tag_name):
         """Get a tag by its name."""
-        return self.project.tags.get(tag_name)
+        try:
+            return self.project.tags.get(tag_name).name
+        except GitlabGetError as e:
+            print(f"Error getting tag {tag_name}: {e}")
+            return "main"
 
     def _search_schema(self, path=""):
         try:
             items = self.project.repository_tree(path=path, recursive=False)
             for item in items:
                 if item["type"] == "tree":
-                    return self.search_schema_inside_repository(item["path"])
+                    return self._search_schema(item["path"])
                 elif item["type"] == "blob":
                     if item["name"].endswith(".schema"):
                         return item
@@ -36,8 +40,8 @@ class SourceGitlabClient(SourceGitlabInterface):
     def get_schema_inside_repository(self, tag_version="main") -> dict:
         schema = self._search_schema("")
         file_path = schema["path"]
-        tag = self._get_tag(tag_version)
-        content = self._get_file_content(file_path, ref=tag.name)
+        tag_name = self._get_tag_name(tag_version)
+        content = self._get_file_content(file_path, ref=tag_name)
         try:
             schema_dict = json.loads(content)
             return schema_dict
