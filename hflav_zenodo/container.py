@@ -5,6 +5,7 @@ from hflav_zenodo.conversors.dynamic_conversor import DynamicConversor
 from hflav_zenodo.conversors.gitlab_schema_handler import GitlabSchemaHandler
 from hflav_zenodo.conversors.zenodo_schema_handler import ZenodoSchemaHandler
 from hflav_zenodo.processing.data_visualizer import DataVisualizer
+from hflav_zenodo.services.command import CommandInvoker
 from hflav_zenodo.services.service import (
     Service,
 )
@@ -27,6 +28,7 @@ class Container(containers.DeclarativeContainer):
     gitlab_source = providers.Singleton(SourceGitlabClient)
     conversor = providers.Singleton(DynamicConversor)
     visualizer = providers.Singleton(DataVisualizer)
+    command_invoker = providers.Singleton(CommandInvoker)
 
     zenodo_schema_handler = providers.Factory(
         ZenodoSchemaHandler, source=source, conversor=conversor, visualizer=visualizer
@@ -54,5 +56,6 @@ class Container(containers.DeclarativeContainer):
         Service,
         source=source,
         conversor=conversor,
+        command_invoker=command_invoker,
         handler_schema_chain=handler_schema_chain,
     )

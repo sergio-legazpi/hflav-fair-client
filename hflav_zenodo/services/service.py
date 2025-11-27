@@ -10,6 +10,10 @@ from hflav_zenodo.conversors.zenodo_schema_handler import ZenodoSchemaHandler
 from hflav_zenodo.exceptions.source_exceptions import DataAccessException
 from hflav_zenodo.models.models import Record
 from hflav_zenodo.processing.visualizer_interface import VisualizerInterface
+from hflav_zenodo.services.command import CommandInvoker
+from hflav_zenodo.services.search_and_load_data_file_command import (
+    SearchAndLoadDataFile,
+)
 from hflav_zenodo.source.source_interface import SourceInterface
 from hflav_zenodo.logger import get_logger
 from hflav_zenodo.services.service_interface import ServiceInterface
@@ -23,10 +27,12 @@ class Service(ServiceInterface):
         self,
         source: SourceInterface = Provide["source"],
         conversor: ConversorInterface = Provide["conversor"],
+        command_invoker: CommandInvoker = Provide["command_invoker"],
         handler_schema_chain=Provide["handler_schema_chain"],
     ) -> None:
         self._source = source
         self._conversor = conversor
+        self._command_invoker = command_invoker
         self._handler_schema_chain = handler_schema_chain
 
     def search_records_by_name(
@@ -47,23 +53,10 @@ class Service(ServiceInterface):
     def search_and_load_data_file(
         self, query: Optional[str] = None, size: int = 10, page: int = 1
     ) -> SimpleNamespace:
-        selected_record = 0
-        selected_file = 0
-        while selected_record == 0:
-            records = self.search_records_by_name(query=query, size=size, page=page)
-            logger.info("Select a record by number (or 0 to search again):")
-            selected_record = int(input())
-            if selected_record == 0:
-                logger.info("Please enter a new search query:")
-                query = input()
-            else:
-                record = records[selected_record - 1]
-                logger.info(f"Selected record: {record.title}")
-                logger.info("Select a file by number:")
-                selected_file = int(input())
-                filename = record.children[selected_file - 1].name
-                logger.info(f"Selected file: {filename}")
-                return self.load_data_file(record_id=record.id, filename=filename)
+        self._command_invoker.set_command(
+            SearchAndLoadDataFile(service=self, query=query, size=size, page=page)
+        )
+        return self._command_invoker.execute_command()
 
     def load_data_file(
         self,
