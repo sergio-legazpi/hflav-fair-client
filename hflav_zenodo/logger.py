@@ -10,6 +10,36 @@ import sys
 from typing import Optional
 
 
+class ColorFormatter(logging.Formatter):
+    """Custom formatter adding colors to log levels."""
+
+    # Códigos de color ANSI
+    GREY = "\033[90m"
+    BLUE = "\033[94m"
+    GREEN = "\033[92m"
+    YELLOW = "\033[93m"
+    RED = "\033[91m"
+    BOLD_RED = "\033[1;91m"
+    RESET = "\033[0m"
+
+    # Asignar colores a niveles
+    LEVEL_COLORS = {
+        logging.DEBUG: GREY,
+        logging.INFO: GREEN,
+        logging.WARNING: YELLOW,
+        logging.ERROR: RED,
+        logging.CRITICAL: BOLD_RED,
+    }
+
+    def format(self, record):
+        level_color = self.LEVEL_COLORS.get(record.levelno, self.RESET)
+        record.levelname = f"{level_color}{record.levelname}{self.RESET}"
+
+        record.msg = f"{level_color}{record.msg}{self.RESET}"
+
+        return super().format(record)
+
+
 def get_logger(name: str, level: Optional[int] = None) -> logging.Logger:
     """
     Get a configured logger instance.
@@ -36,7 +66,7 @@ def get_logger(name: str, level: Optional[int] = None) -> logging.Logger:
         console_handler.setLevel(level)
 
         # Create formatter
-        formatter = logging.Formatter(
+        formatter = ColorFormatter(
             "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
         )
