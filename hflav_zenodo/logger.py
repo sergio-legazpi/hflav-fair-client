@@ -13,7 +13,6 @@ from typing import Optional
 class ColorFormatter(logging.Formatter):
     """Custom formatter adding colors to log levels."""
 
-    # Códigos de color ANSI
     GREY = "\033[90m"
     BLUE = "\033[94m"
     GREEN = "\033[92m"
@@ -22,7 +21,6 @@ class ColorFormatter(logging.Formatter):
     BOLD_RED = "\033[1;91m"
     RESET = "\033[0m"
 
-    # Asignar colores a niveles
     LEVEL_COLORS = {
         logging.DEBUG: GREY,
         logging.INFO: GREEN,

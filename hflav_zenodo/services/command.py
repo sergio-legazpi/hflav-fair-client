@@ -16,6 +16,8 @@ class Command(ABC):
 
 
 class CommandInvoker:
+    """Invoker class to execute and manage commands using the Command pattern."""
+
     def __init__(self):
         self._command = None
         self._history = CommandHistory()

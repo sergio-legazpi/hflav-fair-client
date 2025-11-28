@@ -9,6 +9,7 @@ from hflav_zenodo.source.source_interface import SourceInterface
 
 
 class ConversorHandler(ABC):
+    """Abstract base class for Conversor Handlers in the Chain of Responsibility pattern."""
 
     @inject
     def __init__(

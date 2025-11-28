@@ -14,6 +14,8 @@ from hflav_zenodo.source.source_zenodo_requests import SourceZenodoRequest
 
 
 class Container(containers.DeclarativeContainer):
+    """Dependency injection container for HFLAV Zenodo library."""
+
     wiring_config = containers.WiringConfiguration(
         modules=[
             "hflav_zenodo.conversors.conversor_handler",
