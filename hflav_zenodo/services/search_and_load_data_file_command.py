@@ -23,15 +23,14 @@ class SearchAndLoadDataFile(Command):
         selected_file = 0
         while selected_record == 0:
             records = self._service.search_records_by_name(query=self._query)
-            logger.info("Select a record by number (or 0 to search again):")
+            logger.info("Select a record by number (or 0 to exit):")
             try:
                 selected_record = int(input())
             except ValueError:
                 logger.info("Invalid input. Please enter a number.")
                 continue
             if selected_record == 0:
-                logger.info("Please enter a new search query:")
-                self._query = input()
+                break
             else:
                 record = records[selected_record - 1]
                 logger.info(f"Selected record: {record.title}")
