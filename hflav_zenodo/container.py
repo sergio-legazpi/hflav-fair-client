@@ -25,6 +25,7 @@ class Container(containers.DeclarativeContainer):
             "hflav_zenodo.services.service",
             "hflav_zenodo.conversors.dynamic_conversor",
             "hflav_zenodo.filters.search_filters",
+            "hflav_zenodo.models.hflav_data",
         ]
     )
 

@@ -9,6 +9,8 @@ from hflav_zenodo.processing.data_visualizer import DataVisualizer
 from hflav_zenodo.logger import get_logger
 from dependency_injector.wiring import inject, Provide
 
+from hflav_zenodo.utils.namespace_utils import dict_to_namespace
+
 
 logger = get_logger(__name__)
 
@@ -17,14 +19,6 @@ class DynamicConversor(ConversorInterface):
     @inject
     def __init__(self, visualizer: DataVisualizer = Provide["visualizer"]):
         self._visualizer = visualizer
-
-    def _to_namespace(self, obj):
-        if isinstance(obj, dict):
-            return SimpleNamespace(**{k: self._to_namespace(v) for k, v in obj.items()})
-        elif isinstance(obj, list):
-            return [self._to_namespace(item) for item in obj]
-        else:
-            return obj
 
     def _avoid_extra_fields(self, obj):
         if isinstance(obj, dict):
@@ -43,7 +37,7 @@ class DynamicConversor(ConversorInterface):
             raise StructureException(details=str(e))
 
     def _load_model_from_json(self, data_dict: dict) -> SimpleNamespace:
-        model = self._to_namespace(data_dict)
+        model = dict_to_namespace(data_dict)
         logger.info("Data loaded successfully. This is the content:")
         self._visualizer.print_json_data(model)
         return model

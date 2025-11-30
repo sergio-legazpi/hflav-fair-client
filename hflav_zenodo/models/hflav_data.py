@@ -1,0 +1,44 @@
+from abc import ABC
+from types import SimpleNamespace
+from typing import List
+
+from dependency_injector.wiring import inject, Provide
+
+from hflav_zenodo.processing.visualizer_interface import VisualizerInterface
+from hflav_zenodo.utils.namespace_utils import dict_to_namespace, namespace_to_dict
+from jsonpath_ng import parse
+
+
+class BaseHflavDataDecorator(ABC):
+    """
+    Abstract base class for HFLAV data decorators.
+
+    Attributes:
+        _hflav_data (SimpleNamespace): The HFLAV data stored as a SimpleNamespace.
+    """
+
+    def __init__(self, hflav_data: SimpleNamespace):
+        self._hflav_data = hflav_data
+
+    def __getattr__(self, name):
+        return getattr(self._hflav_data, name)
+
+    def get_data_as_namespace(self) -> SimpleNamespace:
+        return self._hflav_data
+
+
+class HflavDataSearching(BaseHflavDataDecorator):
+    @inject
+    def __init__(
+        self,
+        hflav_data: SimpleNamespace,
+        visualizer: VisualizerInterface = Provide["visualizer"],
+    ):
+        super().__init__(hflav_data)
+        self._visualizer = visualizer
+
+    def get_data_from_name(self, name: str):
+        """
+        Retrieve data by name searching recursively through the entire namespace.
+        """
+        pass
