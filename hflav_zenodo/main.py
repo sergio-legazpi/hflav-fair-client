@@ -8,7 +8,7 @@ from hflav_zenodo.filters.search_filters import (
     SortOptions,
 )
 from hflav_zenodo.filters.zenodo_query import ZenodoQuery
-from hflav_zenodo.models.hflav_data import HflavDataSearching
+from hflav_zenodo.models.hflav_data_searching import HflavDataSearching, SearchOperators
 
 container = Container()
 
@@ -43,8 +43,13 @@ dynamic_class2 = service.load_local_data_file_from_path(
     file_path="HFLAV.json", schema_path="HFLAV.schema", validate=False
 )
 
-# print("RESULTS OF SEARCHING FOR 'value':")
-
 data = HflavDataSearching(dynamic_class2)
 
-# data.get_data_from_name("value")
+data.get_data_from_name(
+    object_name="groups",
+    key_name="name",
+    operator=SearchOperators.CONTAINS,
+    value="(1-prong)",
+)
+
+data2 = HflavDataSearching(dynamic_class2)
