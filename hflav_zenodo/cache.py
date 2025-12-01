@@ -1,0 +1,15 @@
+import requests_cache
+
+from hflav_zenodo.logger import get_logger
+
+logger = get_logger(__name__)
+
+
+def init_cache(name: str = "hflav_cache", expire_after: int = 86400) -> None:
+    """Initialize the requests cache for HTTP requests."""
+    requests_cache.install_cache(
+        cache_name=name,
+        backend="sqlite",
+        expire_after=expire_after,
+    )
+    logger.info(f"Cache {requests_cache.get_cache().cache_name} initialized.")

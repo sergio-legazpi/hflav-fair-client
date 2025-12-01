@@ -1,5 +1,6 @@
 from dependency_injector import containers, providers
 
+from hflav_zenodo.cache import init_cache
 from hflav_zenodo.conversors.template_schema_handler import TemplateSchemaHandler
 from hflav_zenodo.conversors.dynamic_conversor import DynamicConversor
 from hflav_zenodo.conversors.gitlab_schema_handler import GitlabSchemaHandler
@@ -28,6 +29,8 @@ class Container(containers.DeclarativeContainer):
             "hflav_zenodo.models.hflav_data_searching",
         ]
     )
+
+    _cache = providers.Resource(init_cache)
 
     source = providers.Singleton(SourceZenodoRequest)
     gitlab_source = providers.Singleton(SourceGitlabClient)

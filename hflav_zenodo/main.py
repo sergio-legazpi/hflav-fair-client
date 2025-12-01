@@ -12,6 +12,8 @@ from hflav_zenodo.models.hflav_data_searching import HflavDataSearching, SearchO
 
 container = Container()
 
+container.init_resources()
+
 service = container.service()
 
 query1 = (
@@ -37,7 +39,7 @@ query = (
     .merge_filters(query2)
     .build()
 )
-# dynamic_class = service.search_and_load_data_file(query=query)
+dynamic_class = service.search_and_load_data_file(query=query)
 
 dynamic_class2 = service.load_local_data_file_from_path(
     file_path="HFLAV.json", schema_path="HFLAV.schema", validate=False
@@ -47,9 +49,9 @@ data = HflavDataSearching(dynamic_class2)
 
 data.get_data_object_from_key_and_value(
     object_name="averages",
-    key_name="name",
+    key_name="central",
     operator=SearchOperators.GREATER_THAN,
-    value="(1-prong)",
+    value=0.8,
 )
 
 data2 = HflavDataSearching(dynamic_class2)
