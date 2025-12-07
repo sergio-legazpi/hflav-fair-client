@@ -15,7 +15,7 @@ from hflav_zenodo.models.models import Record, Template, File
 from hflav_zenodo.source.source_zenodo_requests import SourceZenodoRequest
 
 
-class TestSourceZenodoRequest(unittest.TestCase):
+class TestSource(unittest.TestCase):
     def setUp(self):
         """Initial setup for each test."""
         self.source = SourceZenodoRequest()
