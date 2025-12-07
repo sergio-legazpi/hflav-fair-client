@@ -4,5 +4,27 @@ To run this project you firstly must create a virtual environment and install al
 
 1. `python -m venv .venv`
 2. `source .venv/bin/activate`
-3. `pip install -r requirements.txt`
-4. `pip install -e .`
+
+To install all the dependencies (including tests):
+- `pip install ".[test]"`
+
+And only dev dependencies:
+- `pip install .`
+
+## Tests
+
+To launch all the tests:
+
+- `pytest tests`
+
+To launch a specific test:
+
+- `pytest tests/test.py`
+
+And to check the coverage:
+
+- `pytest --cov=hflav_zenodo.module`
+
+Where module is a specific module.
+
+e.g: `pytest --cov=hflav_zenodo.source`
