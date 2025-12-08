@@ -22,6 +22,7 @@ dependencies = [
   "matplotlib>=3.10.7",
   "jsonpath_ng>=1.7.0",
   "requests-cache>=1.2.1",
+  "python-dotenv>=1.2.1",
 ]
 classifiers = [
   "Programming Language :: Python :: 3",

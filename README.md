@@ -11,6 +11,25 @@ To install all the dependencies (including tests):
 And only dev dependencies:
 - `pip install .`
 
+## Configuring environment variables
+
+These are all the environment variables available:
+
+```env
+# Cache configuration
+
+HFLAV_CACHE_NAME="hflav_cache"
+HFLAV_CACHE_EXPIRE_AFTER="86400"
+```
+
+If you want to use it in your code you should add these lines before anything:
+
+```python
+from dotenv import load_dotenv
+
+load_dotenv()
+```
+
 ## Tests
 
 To launch all the tests:

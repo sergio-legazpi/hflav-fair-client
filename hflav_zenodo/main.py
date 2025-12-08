@@ -1,4 +1,7 @@
 import datetime
+
+from dotenv import load_dotenv
+
 from hflav_zenodo.container import Container
 from hflav_zenodo.filters.search_filters import (
     AndFilter,
@@ -9,6 +12,8 @@ from hflav_zenodo.filters.search_filters import (
 )
 from hflav_zenodo.filters.zenodo_query import ZenodoQuery
 from hflav_zenodo.models.hflav_data_searching import HflavDataSearching, SearchOperators
+
+load_dotenv()
 
 container = Container()
 
