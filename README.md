@@ -27,14 +27,7 @@ The class structure is as it can be seen in this picture:
 
 ## Configuring environment variables
 
-These are all the environment variables available:
-
-```env
-# Cache configuration
-
-HFLAV_CACHE_NAME="hflav_cache"
-HFLAV_CACHE_EXPIRE_AFTER="86400"
-```
+All the environment variables available can be seen in the `EnvironmentVariables` enum inside the [config](hflav_zenodo/config.py) file
 
 If you want to use it in your code you should add these lines before anything:
 
