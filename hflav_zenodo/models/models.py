@@ -1,4 +1,4 @@
-from abc import abstractmethod, abstractproperty
+from abc import abstractmethod
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, model_validator
@@ -177,5 +177,6 @@ class Template(ZenodoElement):
             "created": self.created,
             "updated": self.updated,
             "version": self.version,
-            "jsons": [c.get_data() for c in (self.jsons or [])],
+            "json": self.jsontemplate,
+            "schema": self.jsonschema,
         }
