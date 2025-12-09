@@ -41,7 +41,12 @@ classifiers = [
 # Dependencies for testing
 test = ["pytest>=7.0", "pytest-cov>=4.0", "pytest-mock>=3.10"]
 # Dependencies for development (includes test dependencies)
-dev = ["hflav-zenodo[test]"]
+# Hypothesis is a possibility to generate random data during development and not depend on the published data
+dev = [
+  "hflav-zenodo[test]",
+  "hypothesis-jsonschema>=0.23.1",
+  "hypothesis>=6.148.7",
+]
 
 [tool.setuptools.packages.find]
 where = ["."]

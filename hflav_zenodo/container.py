@@ -12,6 +12,7 @@ from hflav_zenodo.services.service import (
     Service,
 )
 from hflav_zenodo.source.source_gitlab_client import SourceGitlabClient
+from hflav_zenodo.source.source_zenodo_random_data import SourceZenodoRandomData
 from hflav_zenodo.source.source_zenodo_requests import SourceZenodoRequest
 
 
@@ -32,7 +33,7 @@ class Container(containers.DeclarativeContainer):
 
     _cache = providers.Resource(init_cache)
 
-    source = providers.Singleton(SourceZenodoRequest)
+    source = providers.Singleton(SourceZenodoRandomData)
     gitlab_source = providers.Singleton(SourceGitlabClient)
     conversor = providers.Singleton(DynamicConversor)
     visualizer = providers.Singleton(DataVisualizer)
