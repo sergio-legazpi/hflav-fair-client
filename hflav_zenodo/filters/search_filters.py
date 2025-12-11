@@ -204,9 +204,7 @@ class QueryBuilder:
             ...     .build()  # Uses default_operator default value for final combination
             ... )
         """
-        final_filter = (
-            default_operator(*self.filters)
-            if len(self.filters) > 1
-            else self.filters[0] if self.filters else None
-        )
+        final_filter = self.filters[0] if self.filters else None
+        if len(self.filters) > 1:
+            final_filter = default_operator(*self.filters)
         return self.query(final_filter, self.sort, self.page_size, self.page)

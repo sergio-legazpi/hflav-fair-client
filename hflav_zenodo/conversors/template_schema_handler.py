@@ -1,5 +1,7 @@
+from types import SimpleNamespace
 from hflav_zenodo import logger
 from hflav_zenodo.conversors.conversor_handler import ConversorHandler
+from hflav_zenodo.exceptions.conversor_exceptions import NoHandlerCapableException
 from hflav_zenodo.models.models import Template
 
 logger = logger.get_logger(__name__)
@@ -15,10 +17,12 @@ class TemplateSchemaHandler(ConversorHandler):
     In this scenario, the handler creates a schema based on the template of the Zenodo record.
     """
 
-    def handle(self, template: Template, data_path: str) -> object:
+    def handle(self, template: Template, data_path: str) -> SimpleNamespace:
         logger.info("Handling the request...")
         if not self.can_handle(template, data_path):
-            raise Exception("No handler available for this template and data path")
+            raise NoHandlerCapableException(
+                "No handler available for this template and data path"
+            )
         logger.info(f"Downloading template file {template.jsontemplate.name}...")
         template_path = self._source.download_file_by_id_and_filename(
             id=template.rec_id, filename=template.jsontemplate.name

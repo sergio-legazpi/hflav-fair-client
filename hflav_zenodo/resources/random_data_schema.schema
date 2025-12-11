@@ -1,0 +1,372 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/Hflav",
+  "definitions": {
+    "Hflav": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "metadata": { "$ref": "#/definitions/Metadata" },
+        "groups": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Group" },
+          "minItems": 1
+        }
+      },
+      "required": ["groups", "metadata"],
+      "title": "Hflav"
+    },
+    "Group": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "fit": { "$ref": "#/definitions/Fit" },
+        "averages": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/AverageElement" },
+          "minItems": 1
+        },
+        "averages_correlation": {
+          "type": "array",
+          "items": { "type": "array", "items": { "type": "number" } }
+        },
+        "inputs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Input" },
+          "minItems": 1
+        },
+        "contours": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Contour" }
+        },
+        "scans": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Scan" }
+        },
+        "inputs_correlation": {
+          "type": "array",
+          "items": { "type": "array", "items": { "type": "number" } }
+        }
+      },
+      "required": [
+        "averages",
+        "averages_correlation",
+        "contours",
+        "fit",
+        "inputs",
+        "inputs_correlation",
+        "name",
+        "scans"
+      ],
+      "title": "Group"
+    },
+    "AverageElement": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "PDGcode": {
+          "type": "string",
+          "pattern": "^\\d+$"
+        },
+        "average": { "$ref": "#/definitions/AverageAverage" },
+        "intervals": {
+          "type": "array",
+          "items": { "type": "array", "items": { "type": "number" } }
+        }
+      },
+      "required": ["average", "comment", "intervals", "name", "PDGcode"],
+      "title": "AverageElement"
+    },
+    "AverageAverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "value": { "$ref": "#/definitions/AverageValue" } },
+      "required": ["value"],
+      "title": "AverageAverage"
+    },
+    "AverageValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "central": { "$ref": "#/definitions/Point" },
+        "uncertainty": { "$ref": "#/definitions/Point" },
+        "statistical": { "$ref": "#/definitions/Point" },
+        "systematic": { "$ref": "#/definitions/Point" },
+        "upperlimit": { "type": "number" },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        }
+      },
+      "required": [
+        "central",
+        "statistical",
+        "systematic",
+        "uncertainty",
+        "unit",
+        "upperlimit"
+      ],
+      "title": "AverageValue"
+    },
+    "Contour": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "x": { "$ref": "#/definitions/ContourX" },
+        "y": { "$ref": "#/definitions/ContourX" },
+        "CL": { "type": "number" },
+        "points": {
+          "type": "array",
+          "items": { "type": "array", "items": { "type": "number" } },
+          "minItems": 1
+        }
+      },
+      "required": ["CL", "name", "points", "x", "y"],
+      "title": "Contour"
+    },
+    "ContourX": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        }
+      },
+      "required": ["name", "unit"],
+      "title": "ContourX"
+    },
+    "Fit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "chi2": { "type": "number" },
+        "ndf": { "type": "integer" },
+        "p": { "type": "number" }
+      },
+      "required": ["chi2", "ndf", "p"],
+      "title": "Fit"
+    },
+    "Input": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Source" },
+          "minItems": 1
+        },
+        "intervals": {
+          "type": "array",
+          "items": { "type": "array", "items": { "type": "number" } }
+        }
+      },
+      "required": ["comment", "intervals", "name", "sources"],
+      "title": "Input"
+    },
+    "Source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "value": { "$ref": "#/definitions/SourceValue" },
+        "references": { "$ref": "#/definitions/References" }
+      },
+      "required": ["comment", "name", "references", "value"],
+      "title": "Source"
+    },
+    "References": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bibtex": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "pub": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "doi": {
+          "type": "string",
+          "pattern": "^10\\.\\d{4,9}/[-._;()/:A-Z0-9]+$"
+        },
+        "arxiv": {
+          "type": "string",
+          "pattern": "^(arXiv:\\d{4}\\.\\d{4,5}|\\d{4}\\.\\d{4,5}v\\d+)$"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://[^\\s]+$"
+        }
+      },
+      "required": ["arxiv", "bibtex", "doi", "pub", "url"],
+      "title": "References"
+    },
+    "SourceValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "central": { "$ref": "#/definitions/Point" },
+        "statistical": { "$ref": "#/definitions/Point" },
+        "systematic": { "$ref": "#/definitions/Point" },
+        "uncertainty": { "type": "number" },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        }
+      },
+      "required": [
+        "central",
+        "statistical",
+        "systematic",
+        "uncertainty",
+        "unit"
+      ],
+      "title": "SourceValue"
+    },
+    "Scan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "x": { "$ref": "#/definitions/ScanX" },
+        "y": { "$ref": "#/definitions/ScanX" },
+        "points": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Point" },
+          "minItems": 1
+        }
+      },
+      "required": ["name", "points", "x", "y"],
+      "title": "Scan"
+    },
+    "ScanX": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "values": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 1
+        }
+      },
+      "required": ["name", "unit", "values"],
+      "title": "ScanX"
+    },
+    "Metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\x20-\\x7E]*$"
+        },
+        "schema": {
+          "type": "string",
+          "const": "http://json-schema.org/draft-06/schema#"
+        }
+      },
+      "required": [
+        "author",
+        "date",
+        "description",
+        "schema",
+        "title",
+        "version"
+      ],
+      "title": "Metadata"
+    },
+    "Point": {
+      "anyOf": [
+        { "type": "array", "items": { "type": "number" } },
+        { "type": "number" }
+      ],
+      "title": "Point"
+    }
+  }
+}

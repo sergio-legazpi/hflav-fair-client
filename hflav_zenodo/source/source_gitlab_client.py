@@ -40,9 +40,8 @@ class SourceGitlabClient(SourceGitlabInterface):
             for item in items:
                 if item["type"] == "tree":
                     return self._search_schema(item["path"])
-                elif item["type"] == "blob":
-                    if item["name"].endswith(".schema"):
-                        return item
+                elif item["type"] == "blob" and item["name"].endswith(".schema"):
+                    return item
         except Exception as e:
             raise NoSchemaFoundInsideGitlabRepository(
                 message="No schema found inside the GitLab repository",

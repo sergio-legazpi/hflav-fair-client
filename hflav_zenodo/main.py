@@ -58,5 +58,3 @@ data.get_data_object_from_key_and_value(
     operator=SearchOperators.GREATER_THAN,
     value=0.8,
 )
-
-data2 = HflavDataSearching(dynamic_class2)

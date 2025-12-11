@@ -15,3 +15,16 @@ class StructureException(ConversorException):
         self.message = message
         self.details = details
         super().__init__(self.message)
+
+
+class NoHandlerCapableException(ConversorException):
+    """No handler is capable of processing the given template and data path."""
+
+    def __init__(
+        self,
+        message="No handler is capable of processing the given template and data path.",
+        details=None,
+    ):
+        self.message = message
+        self.details = details
+        super().__init__(self.message)

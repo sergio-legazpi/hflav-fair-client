@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 from dependency_injector.wiring import inject, Provide
 
 from hflav_zenodo import logger
@@ -46,7 +47,7 @@ class GitlabSchemaHandler(ConversorHandler):
                         return version
         return "main"
 
-    def handle(self, template: Template, data_path: str) -> object:
+    def handle(self, template: Template, data_path: str) -> SimpleNamespace:
         logger.info("Handling the request...")
         if not self.can_handle(template, data_path):
             logger.info("Cannot handle the request, passing to next handler...")

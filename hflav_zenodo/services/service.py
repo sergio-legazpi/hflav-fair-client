@@ -92,4 +92,4 @@ class Service(ServiceInterface):
     def plot_data(
         self, data_object: SimpleNamespace, save_path: Optional[str] = None
     ) -> None:
-        return NotImplementedError("Method not implemented yet.")
+        return None

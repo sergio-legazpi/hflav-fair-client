@@ -24,6 +24,12 @@ class ConversorHandler(ABC):
 
     @abstractmethod
     def handle(self, template: Template, data_path: str) -> SimpleNamespace:
+        """
+        Process the request or pass it to the next handler in the chain.
+
+        Raises:
+            NoHandlerCapableException: If no handler in the chain can process the request.
+        """
         pass
 
     @abstractmethod
