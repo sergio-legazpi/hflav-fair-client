@@ -23,7 +23,7 @@
         "name": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "fit": { "$ref": "#/definitions/Fit" },
         "averages": {
@@ -72,12 +72,12 @@
         "name": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "comment": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "PDGcode": {
           "type": "string",
@@ -111,7 +111,7 @@
         "unit": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         }
       },
       "required": [
@@ -131,7 +131,7 @@
         "name": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "x": { "$ref": "#/definitions/ContourX" },
         "y": { "$ref": "#/definitions/ContourX" },
@@ -152,12 +152,12 @@
         "name": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "unit": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         }
       },
       "required": ["name", "unit"],
@@ -181,12 +181,12 @@
         "name": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "comment": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "sources": {
           "type": "array",
@@ -208,12 +208,12 @@
         "name": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "comment": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "value": { "$ref": "#/definitions/SourceValue" },
         "references": { "$ref": "#/definitions/References" }
@@ -228,25 +228,24 @@
         "bibtex": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "pub": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "doi": {
           "type": "string",
-          "pattern": "^10\\.\\d{4,9}/[-._;()/:A-Z0-9]+$"
+          "pattern": "^10\\.\\d+/.*$"
         },
         "arxiv": {
           "type": "string",
-          "pattern": "^(arXiv:\\d{4}\\.\\d{4,5}|\\d{4}\\.\\d{4,5}v\\d+)$"
+          "pattern": "^(arXiv:)?\\d{4}\\.\\d{4,5}(v\\d+)?$"
         },
         "url": {
           "type": "string",
-          "format": "uri",
-          "pattern": "^https?://[^\\s]+$"
+          "format": "uri"
         }
       },
       "required": ["arxiv", "bibtex", "doi", "pub", "url"],
@@ -263,7 +262,7 @@
         "unit": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         }
       },
       "required": [
@@ -282,7 +281,7 @@
         "name": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "x": { "$ref": "#/definitions/ScanX" },
         "y": { "$ref": "#/definitions/ScanX" },
@@ -302,12 +301,12 @@
         "name": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "unit": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "values": {
           "type": "array",
@@ -325,12 +324,12 @@
         "title": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "description": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "version": {
           "type": "string",
@@ -344,7 +343,7 @@
         "author": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^[\\x20-\\x7E]*$"
+          "pattern": "^[ -~]*$"
         },
         "schema": {
           "type": "string",
