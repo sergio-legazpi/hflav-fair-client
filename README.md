@@ -4,7 +4,11 @@
 
 If you want to check the full documentation of this project, go to the docs folder.
 
-The class structure is as it can be seen in this picture:
+The module overview can be checked in this picture:
+
+![Class diagram](docs/Module%20Overview.png)
+
+And the class structure is as it can be seen in this image:
 
 ![Class diagram](docs/Class%20Diagram.png)
 
