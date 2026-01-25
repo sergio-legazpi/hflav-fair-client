@@ -4,9 +4,9 @@
 
 If you want to check the full documentation of this project, go to the docs folder.
 
-The module overview can be checked in this picture:
+The C4 architecture diagram can be checked in this picture:
 
-![Class diagram](docs/Module%20Overview.png)
+![C4 diagram](docs/c4.png)
 
 And the class structure is as it can be seen in this image:
 
