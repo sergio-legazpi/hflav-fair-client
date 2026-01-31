@@ -3,17 +3,17 @@ from typing import Optional, List
 
 from dependency_injector.wiring import inject, Provide
 
-from hflav_zenodo.conversors.conversor_interface import ConversorInterface
-from hflav_zenodo.exceptions.source_exceptions import DataAccessException
-from hflav_zenodo.filters.base_query import BaseQuery
-from hflav_zenodo.models.models import Record
-from hflav_zenodo.services.command import CommandInvoker
-from hflav_zenodo.services.search_and_load_data_file_command import (
+from hflav_fair_client.conversors.conversor_interface import ConversorInterface
+from hflav_fair_client.exceptions.source_exceptions import DataAccessException
+from hflav_fair_client.filters.base_query import BaseQuery
+from hflav_fair_client.models.models import Record
+from hflav_fair_client.services.command import CommandInvoker
+from hflav_fair_client.services.search_and_load_data_file_command import (
     SearchAndLoadDataFile,
 )
-from hflav_zenodo.source.source_interface import SourceInterface
-from hflav_zenodo.logger import get_logger
-from hflav_zenodo.services.service_interface import ServiceInterface
+from hflav_fair_client.source.source_interface import SourceInterface
+from hflav_fair_client.logger import get_logger
+from hflav_fair_client.services.service_interface import ServiceInterface
 
 logger = get_logger(__name__)
 

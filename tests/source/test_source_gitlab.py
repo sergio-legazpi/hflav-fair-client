@@ -3,8 +3,8 @@ import pytest
 from unittest.mock import Mock, patch, MagicMock
 from gitlab import GitlabGetError
 
-from hflav_zenodo.source.source_gitlab_client import SourceGitlabClient
-from hflav_zenodo.exceptions.source_exceptions import (
+from hflav_fair_client.source.source_gitlab_client import SourceGitlabClient
+from hflav_fair_client.exceptions.source_exceptions import (
     NoSchemaFoundInsideGitlabRepository,
     NoVersionTagFound,
 )
@@ -35,7 +35,7 @@ class TestSourceGitlab:
     def mock_gitlab(self):
         """Mock GitLab instance."""
         with patch(
-            "hflav_zenodo.source.source_gitlab_client.Gitlab"
+            "hflav_fair_client.source.source_gitlab_client.Gitlab"
         ) as mock_gitlab_class:
             mock_instance = Mock()
             mock_instance.projects = Mock()

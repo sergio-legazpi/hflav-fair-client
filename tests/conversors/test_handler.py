@@ -4,16 +4,16 @@ from types import SimpleNamespace
 from unittest.mock import Mock, MagicMock, patch, create_autospec
 from pathlib import Path
 
-from hflav_zenodo.conversors.conversor_handler import ConversorHandler
-from hflav_zenodo.conversors.conversor_interface import ConversorInterface
-from hflav_zenodo.processing.visualizer_interface import VisualizerInterface
-from hflav_zenodo.source.source_interface import SourceInterface
-from hflav_zenodo.source.source_gitlab_interface import SourceGitlabInterface
-from hflav_zenodo.models.models import Template, File
+from hflav_fair_client.conversors.conversor_handler import ConversorHandler
+from hflav_fair_client.conversors.conversor_interface import ConversorInterface
+from hflav_fair_client.processing.visualizer_interface import VisualizerInterface
+from hflav_fair_client.source.source_interface import SourceInterface
+from hflav_fair_client.source.source_gitlab_interface import SourceGitlabInterface
+from hflav_fair_client.models.models import Template, File
 
-from hflav_zenodo.conversors.gitlab_schema_handler import GitlabSchemaHandler
-from hflav_zenodo.conversors.template_schema_handler import TemplateSchemaHandler
-from hflav_zenodo.conversors.zenodo_schema_handler import ZenodoSchemaHandler
+from hflav_fair_client.conversors.gitlab_schema_handler import GitlabSchemaHandler
+from hflav_fair_client.conversors.template_schema_handler import TemplateSchemaHandler
+from hflav_fair_client.conversors.zenodo_schema_handler import ZenodoSchemaHandler
 
 
 class TestConversorHandler:
@@ -64,7 +64,7 @@ class TestZenodoSchemaHandler:
     def test_zenodo_schema_handler_initialization(self, mock_dependencies):
         """Test ZenodoSchemaHandler initialization."""
         # Patch the inject decorator at the module where it's used (conversor_handler)
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = ZenodoSchemaHandler(
                 source=mock_dependencies["source"],
                 conversor=mock_dependencies["conversor"],
@@ -81,7 +81,7 @@ class TestZenodoSchemaHandler:
     ):
         """Test can_handle returns True when template has JSON schema."""
         # Patch the inject decorator
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = ZenodoSchemaHandler(**mock_dependencies)
             data_path = "/path/to/data.json"
 
@@ -94,7 +94,7 @@ class TestZenodoSchemaHandler:
         self, mock_dependencies, mock_template_without_schema
     ):
         """Test can_handle returns False when template has no JSON schema."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = ZenodoSchemaHandler(**mock_dependencies)
             data_path = "/path/to/data.json"
 
@@ -104,7 +104,7 @@ class TestZenodoSchemaHandler:
 
     def test_zenodo_schema_handler_set_next(self, mock_dependencies):
         """Test set_next method sets next handler."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = ZenodoSchemaHandler(**mock_dependencies)
             next_handler = Mock(spec=ConversorHandler)
 
@@ -118,7 +118,7 @@ class TestZenodoSchemaHandler:
         self, mock_dependencies, mock_template_with_schema
     ):
         """Test handle method when template has JSON schema."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             # Setup mocks
             schema_path = "/tmp/schema.json"
             schema_content = {
@@ -164,7 +164,7 @@ class TestZenodoSchemaHandler:
         self, mock_dependencies, mock_template_without_schema
     ):
         """Test handle method when template has no JSON schema (passes to next)."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             # Setup handler chain
             handler = ZenodoSchemaHandler(**mock_dependencies)
             next_handler = Mock(spec=ConversorHandler)
@@ -214,7 +214,7 @@ class TestGitlabSchemaHandler:
 
     def test_gitlab_schema_handler_initialization(self, mock_dependencies_with_gitlab):
         """Test GitlabSchemaHandler initialization with gitlab source."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = GitlabSchemaHandler(
                 source=mock_dependencies_with_gitlab["source"],
                 conversor=mock_dependencies_with_gitlab["conversor"],
@@ -235,7 +235,7 @@ class TestGitlabSchemaHandler:
         self, mock_dependencies_with_gitlab, mock_template_with_json_template
     ):
         """Test can_handle returns True when template has JSON template."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = GitlabSchemaHandler(**mock_dependencies_with_gitlab)
             data_path = "/path/to/data.json"
 
@@ -248,7 +248,7 @@ class TestGitlabSchemaHandler:
         self, mock_dependencies_with_gitlab, mock_template_without_json_template
     ):
         """Test can_handle returns False when template has no JSON template."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = GitlabSchemaHandler(**mock_dependencies_with_gitlab)
             data_path = "/path/to/data.json"
 
@@ -258,7 +258,7 @@ class TestGitlabSchemaHandler:
 
     def test_gitlab_schema_handler_set_next(self, mock_dependencies_with_gitlab):
         """Test set_next method sets next handler."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = GitlabSchemaHandler(**mock_dependencies_with_gitlab)
             next_handler = Mock(spec=ConversorHandler)
 
@@ -270,7 +270,7 @@ class TestGitlabSchemaHandler:
 
     def test_try_to_get_schema_version_found(self, mock_dependencies_with_gitlab):
         """Test _try_to_get_schema_version when schema version is found."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = GitlabSchemaHandler(**mock_dependencies_with_gitlab)
 
             # Create a temporary file with schema version
@@ -290,7 +290,7 @@ class TestGitlabSchemaHandler:
 
     def test_try_to_get_schema_version_not_found(self, mock_dependencies_with_gitlab):
         """Test _try_to_get_schema_version when schema version is not found."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = GitlabSchemaHandler(**mock_dependencies_with_gitlab)
 
             # Create a temporary file without schema version
@@ -312,7 +312,7 @@ class TestGitlabSchemaHandler:
         self, mock_dependencies_with_gitlab, mock_template_with_json_template
     ):
         """Test handle method when gitlab schema retrieval succeeds."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             # Setup mocks
             data_path = "/path/to/data.json"
             schema_dict = {"type": "object", "properties": {"name": {"type": "string"}}}
@@ -351,7 +351,7 @@ class TestGitlabSchemaHandler:
         self, mock_dependencies_with_gitlab, mock_template_with_json_template
     ):
         """Test handle method when gitlab schema retrieval fails."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             # Setup mocks
             data_path = "/path/to/data.json"
 
@@ -365,7 +365,7 @@ class TestGitlabSchemaHandler:
             handler._try_to_get_schema_version = Mock(return_value="v1.0.0")
 
             # Mock gitlab source to raise exception
-            from hflav_zenodo.exceptions.source_exceptions import (
+            from hflav_fair_client.exceptions.source_exceptions import (
                 NoSchemaFoundInsideGitlabRepository,
             )
 
@@ -387,7 +387,7 @@ class TestGitlabSchemaHandler:
         self, mock_dependencies_with_gitlab, mock_template_without_json_template
     ):
         """Test handle method when cannot handle (passes to next)."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             # Setup handler chain
             handler = GitlabSchemaHandler(**mock_dependencies_with_gitlab)
             next_handler = Mock(spec=ConversorHandler)
@@ -438,7 +438,7 @@ class TestTemplateSchemaHandler:
 
     def test_template_schema_handler_initialization(self, mock_dependencies):
         """Test TemplateSchemaHandler initialization."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = TemplateSchemaHandler(
                 source=mock_dependencies["source"],
                 conversor=mock_dependencies["conversor"],
@@ -454,7 +454,7 @@ class TestTemplateSchemaHandler:
         self, mock_dependencies, mock_template_with_json_template
     ):
         """Test can_handle returns True when template has JSON template."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = TemplateSchemaHandler(**mock_dependencies)
             data_path = "/path/to/data.json"
 
@@ -467,7 +467,7 @@ class TestTemplateSchemaHandler:
         self, mock_dependencies, mock_template_without_json_template
     ):
         """Test can_handle returns False when template has no JSON template."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = TemplateSchemaHandler(**mock_dependencies)
             data_path = "/path/to/data.json"
 
@@ -477,7 +477,7 @@ class TestTemplateSchemaHandler:
 
     def test_template_schema_handler_set_next(self, mock_dependencies):
         """Test set_next method sets next handler."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = TemplateSchemaHandler(**mock_dependencies)
             next_handler = Mock(spec=ConversorHandler)
 
@@ -491,7 +491,7 @@ class TestTemplateSchemaHandler:
         self, mock_dependencies, mock_template_with_json_template
     ):
         """Test handle method when template processing succeeds."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             # Setup mocks
             template_path = "/tmp/template.json"
             data_path = "/path/to/data.json"
@@ -534,7 +534,7 @@ class TestTemplateSchemaHandler:
         self, mock_dependencies, mock_template_without_json_template
     ):
         """Test handle method when cannot handle (raises exception)."""
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
             handler = TemplateSchemaHandler(**mock_dependencies)
             data_path = "/path/to/data.json"
 
@@ -573,7 +573,7 @@ class TestChainOfResponsibilityIntegration:
         data_path = "/path/to/data.json"
 
         # Patch inject decorator at the base class
-        with patch("hflav_zenodo.conversors.conversor_handler.inject", lambda x: x):
+        with patch("hflav_fair_client.conversors.conversor_handler.inject", lambda x: x):
 
             # Create handlers
             zenodo_handler = ZenodoSchemaHandler(

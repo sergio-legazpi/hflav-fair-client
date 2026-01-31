@@ -1,4 +1,4 @@
-# HFLAV library contribution
+# HFLAV FAIR client contribution
 
 ## Running the code
 
@@ -22,11 +22,11 @@ To launch a specific test:
 
 And to check the coverage:
 
-- `pytest --cov=hflav_zenodo.module`
+- `pytest --cov=hflav_fair_client.module`
 
 Where module is a specific module.
 
-e.g: `pytest --cov=hflav_zenodo.source`
+e.g: `pytest --cov=hflav_fair_client.source`
 
 ## Configuring code analysis locally
 

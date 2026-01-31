@@ -1,12 +1,12 @@
 import json
 from gitlab import Gitlab, GitlabGetError
 
-from hflav_zenodo.exceptions.source_exceptions import (
+from hflav_fair_client.exceptions.source_exceptions import (
     NoSchemaFoundInsideGitlabRepository,
     NoVersionTagFound,
 )
-from hflav_zenodo.logger import get_logger
-from hflav_zenodo.source.source_gitlab_interface import SourceGitlabInterface
+from hflav_fair_client.logger import get_logger
+from hflav_fair_client.source.source_gitlab_interface import SourceGitlabInterface
 
 logger = get_logger(__name__)
 

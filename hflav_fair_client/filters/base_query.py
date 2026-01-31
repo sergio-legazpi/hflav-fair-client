@@ -2,7 +2,7 @@ from abc import ABC
 from typing import TYPE_CHECKING, Any, Dict
 
 if TYPE_CHECKING:
-    from hflav_zenodo.filters.search_filters import Filter
+    from hflav_fair_client.filters.search_filters import Filter
 
 
 class BaseQuery(ABC):

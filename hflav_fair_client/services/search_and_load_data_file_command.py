@@ -1,9 +1,9 @@
-from hflav_zenodo.filters.base_query import BaseQuery
-from hflav_zenodo.logger import get_logger
-from hflav_zenodo.services.command import Command
+from hflav_fair_client.filters.base_query import BaseQuery
+from hflav_fair_client.logger import get_logger
+from hflav_fair_client.services.command import Command
 from dependency_injector.wiring import inject, Provide
 
-from hflav_zenodo.services.service_interface import ServiceInterface
+from hflav_fair_client.services.service_interface import ServiceInterface
 
 logger = get_logger(__name__)
 

@@ -3,11 +3,11 @@ from unittest.mock import Mock, patch, MagicMock, call
 from types import SimpleNamespace
 from typing import List, Optional
 
-from hflav_zenodo.filters.base_query import BaseQuery
-from hflav_zenodo.models.models import Record
-from hflav_zenodo.exceptions.source_exceptions import DataAccessException
-from hflav_zenodo.services.service import Service
-from hflav_zenodo.services.service_interface import ServiceInterface
+from hflav_fair_client.filters.base_query import BaseQuery
+from hflav_fair_client.models.models import Record
+from hflav_fair_client.exceptions.source_exceptions import DataAccessException
+from hflav_fair_client.services.service import Service
+from hflav_fair_client.services.service_interface import ServiceInterface
 
 
 class TestService:

@@ -9,8 +9,8 @@ from abc import ABC, abstractmethod
 from types import SimpleNamespace
 from typing import Optional, List
 
-from hflav_zenodo.filters.base_query import BaseQuery
-from hflav_zenodo.models.models import Record
+from hflav_fair_client.filters.base_query import BaseQuery
+from hflav_fair_client.models.models import Record
 
 
 class ServiceInterface(ABC):

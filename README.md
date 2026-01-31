@@ -1,4 +1,4 @@
-# hflav-python-library
+# HFLAV FAIR client
 
 ## Documentation
 
@@ -14,7 +14,7 @@ And the class structure is as it can be seen in this image:
 
 ## Configuring environment variables
 
-All the environment variables available can be seen in the `EnvironmentVariables` enum inside the [config](hflav_zenodo/config.py) file
+All the environment variables available can be seen in the `EnvironmentVariables` enum inside the [config](hflav_fair_client/config.py) file
 
 If you want to use it in your code you should add these lines before anything:
 

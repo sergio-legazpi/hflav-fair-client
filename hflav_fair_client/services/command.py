@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any
-from hflav_zenodo.logger import get_logger
+from hflav_fair_client.logger import get_logger
 
 logger = get_logger(__name__)
 

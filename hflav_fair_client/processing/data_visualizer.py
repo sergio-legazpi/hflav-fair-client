@@ -3,8 +3,8 @@ from types import SimpleNamespace
 
 from rich import print_json
 
-from hflav_zenodo.processing.visualizer_interface import VisualizerInterface
-from hflav_zenodo.utils.namespace_utils import namespace_to_dict
+from hflav_fair_client.processing.visualizer_interface import VisualizerInterface
+from hflav_fair_client.utils.namespace_utils import namespace_to_dict
 
 
 class DataVisualizer(VisualizerInterface):

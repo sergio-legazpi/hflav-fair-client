@@ -4,8 +4,8 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import List, Optional
 
-from hflav_zenodo.filters.base_query import BaseQuery
-from hflav_zenodo.models.models import Record, Template
+from hflav_fair_client.filters.base_query import BaseQuery
+from hflav_fair_client.models.models import Record, Template
 
 
 class SourceInterface(ABC):

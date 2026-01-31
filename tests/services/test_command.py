@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import Mock, patch, MagicMock
 from typing import Any
-from hflav_zenodo.services.command import Command, CommandInvoker, CommandHistory
+from hflav_fair_client.services.command import Command, CommandInvoker, CommandHistory
 
 
 class TestCommandPattern:
@@ -115,7 +115,7 @@ class TestCommandPattern:
         """Test undoing when history is empty logs message."""
         invoker = CommandInvoker()
 
-        with patch("hflav_zenodo.services.command.logger") as mock_logger:
+        with patch("hflav_fair_client.services.command.logger") as mock_logger:
             result = invoker.undo_command()
 
             # Should log info message
@@ -158,7 +158,7 @@ class TestCommandPattern:
         # Don't execute, just set
 
         # Undo should log message (no history)
-        with patch("hflav_zenodo.services.command.logger") as mock_logger:
+        with patch("hflav_fair_client.services.command.logger") as mock_logger:
             invoker.undo_command()
             mock_logger.info.assert_called_once_with("No commands to undo.")
 
@@ -269,7 +269,7 @@ class TestCommandPattern:
         """Test undoing when history is empty logs message."""
         history = CommandHistory()
 
-        with patch("hflav_zenodo.services.command.logger") as mock_logger:
+        with patch("hflav_fair_client.services.command.logger") as mock_logger:
             history.undo_last()
 
             mock_logger.info.assert_called_once_with("No commands to undo.")
@@ -390,6 +390,6 @@ class TestCommandPattern:
         mock_command1.undo.assert_called_once()
 
         # Try to undo again (should log message)
-        with patch("hflav_zenodo.services.command.logger") as mock_logger:
+        with patch("hflav_fair_client.services.command.logger") as mock_logger:
             invoker.undo_command()
             mock_logger.info.assert_called_once_with("No commands to undo.")

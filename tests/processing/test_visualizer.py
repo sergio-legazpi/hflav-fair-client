@@ -3,8 +3,8 @@ import json
 from types import SimpleNamespace
 from unittest.mock import patch, MagicMock, call
 
-from hflav_zenodo.processing.visualizer_interface import VisualizerInterface
-from hflav_zenodo.processing.data_visualizer import DataVisualizer
+from hflav_fair_client.processing.visualizer_interface import VisualizerInterface
+from hflav_fair_client.processing.data_visualizer import DataVisualizer
 
 
 class TestVisualizer:
@@ -24,9 +24,9 @@ class TestVisualizer:
 
         # Patch both json.dumps and print_json
         with patch(
-            "hflav_zenodo.processing.data_visualizer.json.dumps"
+            "hflav_fair_client.processing.data_visualizer.json.dumps"
         ) as mock_dumps, patch(
-            "hflav_zenodo.processing.data_visualizer.print_json"
+            "hflav_fair_client.processing.data_visualizer.print_json"
         ) as mock_print_json:
 
             # Setup the mock return
@@ -50,11 +50,11 @@ class TestVisualizer:
         test_data = SimpleNamespace(name="test", value=123)
 
         with patch(
-            "hflav_zenodo.processing.data_visualizer.namespace_to_dict"
+            "hflav_fair_client.processing.data_visualizer.namespace_to_dict"
         ) as mock_namespace_to_dict, patch(
-            "hflav_zenodo.processing.data_visualizer.json.dumps"
+            "hflav_fair_client.processing.data_visualizer.json.dumps"
         ) as mock_dumps, patch(
-            "hflav_zenodo.processing.data_visualizer.print_json"
+            "hflav_fair_client.processing.data_visualizer.print_json"
         ) as mock_print_json:
 
             # Mock the conversions
@@ -87,9 +87,9 @@ class TestVisualizer:
             mock_json_string = "mock_json_string"
 
             with patch(
-                "hflav_zenodo.processing.data_visualizer.json.dumps"
+                "hflav_fair_client.processing.data_visualizer.json.dumps"
             ) as mock_dumps, patch(
-                "hflav_zenodo.processing.data_visualizer.print_json"
+                "hflav_fair_client.processing.data_visualizer.print_json"
             ) as mock_print_json:
 
                 mock_dumps.return_value = mock_json_string
@@ -124,11 +124,11 @@ class TestVisualizer:
 
         for test_data in test_cases:
             with patch(
-                "hflav_zenodo.processing.data_visualizer.namespace_to_dict"
+                "hflav_fair_client.processing.data_visualizer.namespace_to_dict"
             ) as mock_namespace_to_dict, patch(
-                "hflav_zenodo.processing.data_visualizer.json.dumps"
+                "hflav_fair_client.processing.data_visualizer.json.dumps"
             ) as mock_dumps, patch(
-                "hflav_zenodo.processing.data_visualizer.print_json"
+                "hflav_fair_client.processing.data_visualizer.print_json"
             ) as mock_print_json:
 
                 # Create a simple mock dictionary
@@ -154,7 +154,7 @@ class TestVisualizer:
         # Create a schema with non-serializable content
         non_serializable_schema = {"type": "object", "properties": {"test": "value"}}
 
-        with patch("hflav_zenodo.processing.data_visualizer.json.dumps") as mock_dumps:
+        with patch("hflav_fair_client.processing.data_visualizer.json.dumps") as mock_dumps:
             mock_dumps.side_effect = TypeError("Not JSON serializable")
 
             # Should raise the exception
@@ -168,7 +168,7 @@ class TestVisualizer:
         test_data = SimpleNamespace(name="test")
 
         with patch(
-            "hflav_zenodo.processing.data_visualizer.namespace_to_dict"
+            "hflav_fair_client.processing.data_visualizer.namespace_to_dict"
         ) as mock_namespace_to_dict:
             mock_namespace_to_dict.side_effect = Exception("Conversion failed")
 
@@ -191,9 +191,9 @@ class TestVisualizer:
         mock_json_string = "mock_json_string"
 
         with patch(
-            "hflav_zenodo.processing.data_visualizer.json.dumps"
+            "hflav_fair_client.processing.data_visualizer.json.dumps"
         ) as mock_dumps, patch(
-            "hflav_zenodo.processing.data_visualizer.print_json"
+            "hflav_fair_client.processing.data_visualizer.print_json"
         ) as mock_print_json:
 
             mock_dumps.return_value = mock_json_string
@@ -216,11 +216,11 @@ class TestVisualizer:
         )
 
         with patch(
-            "hflav_zenodo.processing.data_visualizer.namespace_to_dict"
+            "hflav_fair_client.processing.data_visualizer.namespace_to_dict"
         ) as mock_namespace_to_dict, patch(
-            "hflav_zenodo.processing.data_visualizer.json.dumps"
+            "hflav_fair_client.processing.data_visualizer.json.dumps"
         ) as mock_dumps, patch(
-            "hflav_zenodo.processing.data_visualizer.print_json"
+            "hflav_fair_client.processing.data_visualizer.print_json"
         ) as mock_print_json:
 
             # Setup mock returns
@@ -247,15 +247,15 @@ class TestVisualizer:
         """Test that both interface methods return None as specified."""
         visualizer = DataVisualizer()
 
-        with patch("hflav_zenodo.processing.data_visualizer.print_json"):
-            with patch("hflav_zenodo.processing.data_visualizer.json.dumps"):
+        with patch("hflav_fair_client.processing.data_visualizer.print_json"):
+            with patch("hflav_fair_client.processing.data_visualizer.json.dumps"):
                 # Test print_schema returns None
                 result = visualizer.print_schema({})
                 assert result is None
 
-        with patch("hflav_zenodo.processing.data_visualizer.namespace_to_dict"):
-            with patch("hflav_zenodo.processing.data_visualizer.json.dumps"):
-                with patch("hflav_zenodo.processing.data_visualizer.print_json"):
+        with patch("hflav_fair_client.processing.data_visualizer.namespace_to_dict"):
+            with patch("hflav_fair_client.processing.data_visualizer.json.dumps"):
+                with patch("hflav_fair_client.processing.data_visualizer.print_json"):
                     # Test print_json_data returns None
                     result = visualizer.print_json_data(SimpleNamespace())
                     assert result is None

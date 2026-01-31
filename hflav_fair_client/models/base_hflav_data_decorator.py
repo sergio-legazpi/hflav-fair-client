@@ -2,8 +2,8 @@ from abc import ABC
 from types import SimpleNamespace
 from typing import List
 
-from hflav_zenodo.processing.visualizer_interface import VisualizerInterface
-from hflav_zenodo.utils.namespace_utils import dict_to_namespace, namespace_to_dict
+from hflav_fair_client.processing.visualizer_interface import VisualizerInterface
+from hflav_fair_client.utils.namespace_utils import dict_to_namespace, namespace_to_dict
 
 
 class BaseHflavDataDecorator(ABC):

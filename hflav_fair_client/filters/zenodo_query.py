@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Optional
 
-from hflav_zenodo.filters.base_query import BaseQuery
-from hflav_zenodo.filters.search_filters import Filter
+from hflav_fair_client.filters.base_query import BaseQuery
+from hflav_fair_client.filters.search_filters import Filter
 
 
 # Main Query

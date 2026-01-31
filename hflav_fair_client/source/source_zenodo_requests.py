@@ -3,13 +3,13 @@ import requests
 import os
 from datetime import datetime
 
-from hflav_zenodo.exceptions.source_exceptions import (
+from hflav_fair_client.exceptions.source_exceptions import (
     DataAccessException,
     DataNotFoundException,
 )
-from hflav_zenodo.filters.base_query import BaseQuery
-from hflav_zenodo.models.models import File, Record, Template
-from hflav_zenodo.source.source_interface import SourceInterface
+from hflav_fair_client.filters.base_query import BaseQuery
+from hflav_fair_client.models.models import File, Record, Template
+from hflav_fair_client.source.source_interface import SourceInterface
 
 
 class SourceZenodoRequest(SourceInterface):

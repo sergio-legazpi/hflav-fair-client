@@ -5,7 +5,7 @@ from typing import Any, Type, Union
 
 from dependency_injector.wiring import inject, Provide
 
-from hflav_zenodo.filters.base_query import BaseQuery
+from hflav_fair_client.filters.base_query import BaseQuery
 
 
 class Filter(ABC):

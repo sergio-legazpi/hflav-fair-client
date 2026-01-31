@@ -5,14 +5,14 @@ import tempfile
 import os
 import requests
 
-from hflav_zenodo.exceptions.source_exceptions import (
+from hflav_fair_client.exceptions.source_exceptions import (
     DataAccessException,
     DataNotFoundException,
 )
-from hflav_zenodo.filters.base_query import BaseQuery
-from hflav_zenodo.filters.search_filters import OrFilter, QueryBuilder
-from hflav_zenodo.models.models import Record, Template, File
-from hflav_zenodo.source.source_zenodo_requests import SourceZenodoRequest
+from hflav_fair_client.filters.base_query import BaseQuery
+from hflav_fair_client.filters.search_filters import OrFilter, QueryBuilder
+from hflav_fair_client.models.models import Record, Template, File
+from hflav_fair_client.source.source_zenodo_requests import SourceZenodoRequest
 
 
 class TestSource(unittest.TestCase):

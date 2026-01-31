@@ -1,18 +1,18 @@
 from types import SimpleNamespace
 from dependency_injector.wiring import inject, Provide
 
-from hflav_zenodo import logger
+from hflav_fair_client import logger
 
-from hflav_zenodo.conversors.conversor_handler import ConversorHandler
-from hflav_zenodo.conversors.conversor_interface import ConversorInterface
-from hflav_zenodo.exceptions.source_exceptions import (
+from hflav_fair_client.conversors.conversor_handler import ConversorHandler
+from hflav_fair_client.conversors.conversor_interface import ConversorInterface
+from hflav_fair_client.exceptions.source_exceptions import (
     NoSchemaFoundInsideGitlabRepository,
     NoVersionTagFound,
 )
-from hflav_zenodo.models.models import Template
-from hflav_zenodo.processing.visualizer_interface import VisualizerInterface
-from hflav_zenodo.source.source_gitlab_interface import SourceGitlabInterface
-from hflav_zenodo.source.source_interface import SourceInterface
+from hflav_fair_client.models.models import Template
+from hflav_fair_client.processing.visualizer_interface import VisualizerInterface
+from hflav_fair_client.source.source_gitlab_interface import SourceGitlabInterface
+from hflav_fair_client.source.source_interface import SourceInterface
 
 logger = logger.get_logger(__name__)
 

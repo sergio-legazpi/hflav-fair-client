@@ -2,10 +2,10 @@ from abc import ABC, abstractmethod
 from types import SimpleNamespace
 from dependency_injector.wiring import inject, Provide
 
-from hflav_zenodo.conversors.conversor_interface import ConversorInterface
-from hflav_zenodo.models.models import Template
-from hflav_zenodo.processing.visualizer_interface import VisualizerInterface
-from hflav_zenodo.source.source_interface import SourceInterface
+from hflav_fair_client.conversors.conversor_interface import ConversorInterface
+from hflav_fair_client.models.models import Template
+from hflav_fair_client.processing.visualizer_interface import VisualizerInterface
+from hflav_fair_client.source.source_interface import SourceInterface
 
 
 class ConversorHandler(ABC):

@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Dict, Any, ClassVar, List
 from unittest.mock import Mock, patch
 
-from hflav_zenodo.models.models import ZenodoElement, File, Record, Template
+from hflav_fair_client.models.models import ZenodoElement, File, Record, Template
 
 
 class TestZenodoElementInterface:

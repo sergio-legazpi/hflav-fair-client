@@ -3,13 +3,13 @@ from types import SimpleNamespace
 
 from genson import SchemaBuilder
 import jsonschema
-from hflav_zenodo.conversors.conversor_interface import ConversorInterface
-from hflav_zenodo.exceptions.conversor_exceptions import StructureException
-from hflav_zenodo.processing.data_visualizer import DataVisualizer
-from hflav_zenodo.logger import get_logger
+from hflav_fair_client.conversors.conversor_interface import ConversorInterface
+from hflav_fair_client.exceptions.conversor_exceptions import StructureException
+from hflav_fair_client.processing.data_visualizer import DataVisualizer
+from hflav_fair_client.logger import get_logger
 from dependency_injector.wiring import inject, Provide
 
-from hflav_zenodo.utils.namespace_utils import dict_to_namespace
+from hflav_fair_client.utils.namespace_utils import dict_to_namespace
 
 
 logger = get_logger(__name__)

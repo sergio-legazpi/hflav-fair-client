@@ -1,13 +1,13 @@
 # Logging Configuration
 
-The `hflav_zenodo` package uses Python's built-in logging module for all output messages.
+The `hflav_fair_client` package uses Python's built-in logging module for all output messages.
 
 ## Usage
 
-The logger is centrally configured in `hflav_zenodo/logger.py`. All modules import and use this logger:
+The logger is centrally configured in `hflav_fair_client/logger.py`. All modules import and use this logger:
 
 ```python
-from hflav_zenodo.logger import get_logger
+from hflav_fair_client.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -25,7 +25,7 @@ The default log level is `INFO`. You can change the log level using the `set_log
 
 ```python
 import logging
-from hflav_zenodo.logger import get_logger, set_log_level
+from hflav_fair_client.logger import get_logger, set_log_level
 
 logger = get_logger(__name__)
 set_log_level(logger, logging.DEBUG)  # Show all messages including debug
@@ -40,7 +40,7 @@ YYYY-MM-DD HH:MM:SS - module_name - LEVEL - message
 
 Example:
 ```
-2025-11-24 10:30:45 - hflav_zenodo.services.services - INFO - Getting record with id 12345...
+2025-11-24 10:30:45 - hflav_fair_client.services.services - INFO - Getting record with id 12345...
 ```
 
 ## Data Visualization

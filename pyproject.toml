@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "hflav-zenodo"
+name = "hflav-fair-client"
 version = "0.1.0"
-description = "Helper to fetch HFLAV data from Zenodo"
+description = "HFLAV FAIR client - Helper to fetch HFLAV data from Zenodo"
 readme = "README.md"
 authors = [{ name = "sergio" }]
 license = { text = "MIT" }
@@ -43,7 +43,7 @@ test = ["pytest>=7.0", "pytest-cov>=4.0", "pytest-mock>=3.10"]
 # Dependencies for development (includes test dependencies)
 # Hypothesis is a possibility to generate random data during development and not depend on the published data
 dev = [
-  "hflav-zenodo[test]",
+  "hflav-fair-client[test]",
   "pysonar>=1.3.0.4086",
   "hypothesis-jsonschema>=0.23.1",
   "hypothesis>=6.148.7",
@@ -51,16 +51,16 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["hflav_zenodo*"]
+include = ["hflav_fair_client*"]
 
 [tool.setuptools.package-data]
-"hflav_zenodo" = ["py.typed"]
+"hflav_fair_client" = ["py.typed"]
 
 [project.urls]
 Homepage = "https://example.org/"
-Repository = "https://github.com/yourusername/hflav-zenodo"
-Documentation = "https://yourusername.github.io/hflav-zenodo/"
-"Bug Tracker" = "https://github.com/yourusername/hflav-zenodo/issues"
+Repository = "https://github.com/yourusername/hflav-fair-client"
+Documentation = "https://yourusername.github.io/hflav-fair-client/"
+"Bug Tracker" = "https://github.com/yourusername/hflav-fair-client/issues"
 
 # Optional: Configuration for pytest
 [tool.pytest.ini_options]
@@ -76,7 +76,7 @@ markers = [
 
 # Optional: Configuration for coverage
 [tool.coverage.run]
-source = ["hflav_zenodo"]
+source = ["hflav_fair_client"]
 omit = [
   "*/tests/*",
   "*/test_*.py",

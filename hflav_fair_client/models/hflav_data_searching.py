@@ -3,9 +3,9 @@ from types import SimpleNamespace
 from typing import List, Union
 from dependency_injector.wiring import inject, Provide
 
-from hflav_zenodo.models.base_hflav_data_decorator import BaseHflavDataDecorator
-from hflav_zenodo.processing.visualizer_interface import VisualizerInterface
-from hflav_zenodo.utils.namespace_utils import dict_to_namespace, namespace_to_dict
+from hflav_fair_client.models.base_hflav_data_decorator import BaseHflavDataDecorator
+from hflav_fair_client.processing.visualizer_interface import VisualizerInterface
+from hflav_fair_client.utils.namespace_utils import dict_to_namespace, namespace_to_dict
 
 from jsonpath_ng.ext import parse
 

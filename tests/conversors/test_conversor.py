@@ -4,8 +4,8 @@ from unittest.mock import Mock, patch, mock_open, call
 from types import SimpleNamespace
 import jsonschema
 
-from hflav_zenodo.conversors.dynamic_conversor import DynamicConversor
-from hflav_zenodo.exceptions.conversor_exceptions import StructureException
+from hflav_fair_client.conversors.dynamic_conversor import DynamicConversor
+from hflav_fair_client.exceptions.conversor_exceptions import StructureException
 
 
 class TestConversor:

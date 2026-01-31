@@ -6,9 +6,9 @@ from hypothesis import given, settings, Phase, HealthCheck
 import hypothesis
 from hypothesis_jsonschema import from_schema
 
-from hflav_zenodo.filters.base_query import BaseQuery
-from hflav_zenodo.models.models import File, Record, Template
-from hflav_zenodo.source.source_interface import SourceInterface
+from hflav_fair_client.filters.base_query import BaseQuery
+from hflav_fair_client.models.models import File, Record, Template
+from hflav_fair_client.source.source_interface import SourceInterface
 
 
 class SourceZenodoRandomData(SourceInterface):
@@ -16,14 +16,14 @@ class SourceZenodoRandomData(SourceInterface):
     def __init__(self):
         super().__init__()
         with open(
-            "hflav_zenodo/resources/random_data_schema.schema", "r", encoding="utf-8"
+            "hflav_fair_client/resources/random_data_schema.schema", "r", encoding="utf-8"
         ) as file:
             schema_dict = json.load(file)
         self._schema = schema_dict
 
     _random_generated_data_name = "random_generated_data.json"
 
-    _schema_name = "hflav_zenodo_schema.schema"
+    _schema_name = "hflav_fair_client_schema.schema"
 
     # Cache the strategy to avoid recreating it on every call
     _cached_strategy = None

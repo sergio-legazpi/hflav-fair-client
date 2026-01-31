@@ -1,5 +1,5 @@
 """
-Logger configuration for hflav_zenodo package.
+Logger configuration for hflav_fair_client package.
 
 This module provides a centralized logging configuration that can be imported
 and used throughout the package.

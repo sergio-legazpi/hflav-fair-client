@@ -1,8 +1,8 @@
 import os
 import requests_cache
 
-from hflav_zenodo.config import Config, EnvironmentVariables
-from hflav_zenodo.logger import get_logger
+from hflav_fair_client.config import Config, EnvironmentVariables
+from hflav_fair_client.logger import get_logger
 
 logger = get_logger(__name__)
 

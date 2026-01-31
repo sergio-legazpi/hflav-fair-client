@@ -4,8 +4,8 @@ from abc import abstractmethod
 from typing import Type, Union
 from unittest.mock import Mock, MagicMock, patch, create_autospec
 
-from hflav_zenodo.filters.base_query import BaseQuery
-from hflav_zenodo.filters.search_filters import (
+from hflav_fair_client.filters.base_query import BaseQuery
+from hflav_fair_client.filters.search_filters import (
     Filter,
     TextFilter,
     DateRangeFilter,
@@ -17,7 +17,7 @@ from hflav_zenodo.filters.search_filters import (
     SortOptions,
     QueryBuilder,
 )
-from hflav_zenodo.filters.zenodo_query import ZenodoQuery
+from hflav_fair_client.filters.zenodo_query import ZenodoQuery
 
 
 class TestBaseQuery:
@@ -205,7 +205,7 @@ class TestQueryBuilder:
     def test_query_builder_initialization_without_injection(self):
         """Test QueryBuilder initializes with default values without DI."""
         # Patch the inject decorator to bypass dependency injection
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             # Create QueryBuilder directly
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=None)
@@ -218,7 +218,7 @@ class TestQueryBuilder:
 
     def test_query_builder_with_text(self):
         """Test adding text filter to QueryBuilder."""
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=None)
 
@@ -232,7 +232,7 @@ class TestQueryBuilder:
 
     def test_query_builder_with_date_range(self):
         """Test adding date range filter to QueryBuilder."""
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=None)
 
@@ -252,7 +252,7 @@ class TestQueryBuilder:
 
     def test_query_builder_with_number(self):
         """Test adding numeric filter to QueryBuilder."""
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=None)
 
@@ -267,7 +267,7 @@ class TestQueryBuilder:
 
     def test_query_builder_with_existence(self):
         """Test adding existence filter to QueryBuilder."""
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=None)
 
@@ -281,7 +281,7 @@ class TestQueryBuilder:
 
     def test_query_builder_order_by(self):
         """Test setting sort order in QueryBuilder."""
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=None)
 
@@ -299,7 +299,7 @@ class TestQueryBuilder:
 
     def test_query_builder_with_pagination(self):
         """Test setting pagination in QueryBuilder."""
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=None)
 
@@ -311,7 +311,7 @@ class TestQueryBuilder:
 
     def test_query_builder_merge_filters(self):
         """Test merging filters from another QueryBuilder."""
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             # Create first builder with filters
             builder1 = QueryBuilder.__new__(QueryBuilder)
             builder1.__init__(query=None)
@@ -333,7 +333,7 @@ class TestQueryBuilder:
 
     def test_query_builder_apply_combinator_and(self):
         """Test applying AND combinator to filters."""
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=None)
             builder.with_text(field="title", value="test1")
@@ -348,7 +348,7 @@ class TestQueryBuilder:
 
     def test_query_builder_apply_combinator_or(self):
         """Test applying OR combinator to filters."""
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=None)
             builder.with_text(field="title", value="test1")
@@ -363,7 +363,7 @@ class TestQueryBuilder:
 
     def test_query_builder_apply_combinator_not(self):
         """Test applying NOT combinator to filters."""
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=None)
             builder.with_text(field="title", value="test")
@@ -382,7 +382,7 @@ class TestQueryBuilder:
         mock_query_instance = Mock()
         mock_query_class.return_value = mock_query_instance
 
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=mock_query_class)
             builder.with_text(field="title", value="test1")
@@ -414,7 +414,7 @@ class TestQueryBuilder:
         mock_query_instance = Mock()
         mock_query_class.return_value = mock_query_instance
 
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=mock_query_class)
             builder.with_text(field="title", value="test")
@@ -435,7 +435,7 @@ class TestQueryBuilder:
         mock_query_instance = Mock()
         mock_query_class.return_value = mock_query_instance
 
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=mock_query_class)
 
@@ -454,7 +454,7 @@ class TestQueryBuilder:
         mock_query_instance = Mock()
         mock_query_class.return_value = mock_query_instance
 
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=mock_query_class)
             builder.with_text(field="title", value="test1")
@@ -476,7 +476,7 @@ class TestQueryBuilder:
         mock_query_instance = Mock()
         mock_query_class.return_value = mock_query_instance
 
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=mock_query_class)
 
@@ -652,7 +652,7 @@ class TestIntegration:
         end_date = datetime.datetime(2023, 12, 31)
 
         # Mock the inject decorator
-        with patch("hflav_zenodo.filters.search_filters.inject", lambda x: x):
+        with patch("hflav_fair_client.filters.search_filters.inject", lambda x: x):
             # Create QueryBuilder with ZenodoQuery as the query class
             builder = QueryBuilder.__new__(QueryBuilder)
             builder.__init__(query=ZenodoQuery)

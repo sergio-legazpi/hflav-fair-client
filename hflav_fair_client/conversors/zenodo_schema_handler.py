@@ -1,8 +1,8 @@
 import json
-from hflav_zenodo import logger
+from hflav_fair_client import logger
 from types import SimpleNamespace
-from hflav_zenodo.conversors.conversor_handler import ConversorHandler
-from hflav_zenodo.models.models import Template
+from hflav_fair_client.conversors.conversor_handler import ConversorHandler
+from hflav_fair_client.models.models import Template
 
 logger = logger.get_logger(__name__)
 
