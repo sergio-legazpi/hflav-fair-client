@@ -110,6 +110,79 @@ class TestSource(unittest.TestCase):
         self.assertIn("Failed to get records by name", str(context.exception))
 
     @patch("requests.get")
+    def test_get_all_template_versions_success(self, mock_get):
+        """Test successful retrieval of all template versions."""
+        # Mock the initial record response
+        mock_record_response = Mock()
+        mock_record_response.json.return_value = {
+            "id": 12087575,
+            "links": {"versions": "https://zenodo.org/api/records/12087575/versions"},
+        }
+        mock_record_response.raise_for_status = Mock()
+
+        # Mock the versions response
+        mock_versions_response = Mock()
+        mock_versions_response.json.return_value = {
+            "hits": {
+                "hits": [
+                    {
+                        "id": 1,
+                        "created": "2023-01-01T12:00:00.000000",
+                        "updated": "2023-01-01T12:00:00.000000",
+                        "metadata": {"title": "Template v1", "version": "1.0.0"},
+                        "files": [],
+                    },
+                    {
+                        "id": 2,
+                        "created": "2023-06-01T12:00:00.000000",
+                        "updated": "2023-06-01T12:00:00.000000",
+                        "metadata": {"title": "Template v2", "version": "2.0.0"},
+                        "files": [],
+                    },
+                ]
+            }
+        }
+        mock_versions_response.raise_for_status = Mock()
+
+        mock_get.side_effect = [mock_record_response, mock_versions_response]
+
+        # Execute
+        result = self.source._get_all_template_versions()
+
+        # Verify
+        self.assertEqual(len(result), 2)
+        self.assertIsInstance(result[0], Template)
+        self.assertIsInstance(result[1], Template)
+
+    @patch("requests.get")
+    def test_get_all_template_versions_http_error(self, mock_get):
+        """Test _get_all_template_versions with HTTP error."""
+        mock_response = Mock()
+        mock_response.raise_for_status.side_effect = requests.HTTPError("HTTP Error")
+        mock_get.return_value = mock_response
+
+        with self.assertRaises(DataAccessException) as context:
+            self.source._get_all_template_versions()
+
+        self.assertIn("Failed to get template versions", str(context.exception))
+
+    @patch("requests.get")
+    def test_get_all_template_versions_no_versions_link(self, mock_get):
+        """Test _get_all_template_versions when no versions link found."""
+        mock_record_response = Mock()
+        mock_record_response.json.return_value = {
+            "id": 12087575,
+            "links": {},  # No versions link
+        }
+        mock_record_response.raise_for_status = Mock()
+        mock_get.return_value = mock_record_response
+
+        with self.assertRaises(DataNotFoundException) as context:
+            self.source._get_all_template_versions()
+
+        self.assertIn("No versions link found", str(context.exception))
+
+    @patch("requests.get")
     def test_get_record_success(self, mock_get):
         """Successful test of get_record."""
         mock_response = Mock()

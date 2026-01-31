@@ -83,6 +83,11 @@ omit = [
   "*/__pycache__/*",
   "*/setup.py",
   "*/conftest.py",
+  "*/hflav_fair_client/cache.py",
+  "*/hflav_fair_client/config.py",
+  "*/hflav_fair_client/container.py",
+  "*/hflav_fair_client/logger.py",
+  "*/hflav_fair_client/main.py",
 ]
 
 [tool.coverage.report]

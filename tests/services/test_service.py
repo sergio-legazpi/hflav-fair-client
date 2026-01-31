@@ -529,3 +529,19 @@ class TestService:
         assert result == mock_data_object
         mock_command_invoker.set_command.assert_called_once()
         mock_command_invoker.execute_command.assert_called_once()
+
+    def test_plot_data(self, service):
+        """Test plot_data method."""
+        from types import SimpleNamespace
+
+        data_object = SimpleNamespace(test="data")
+
+        # Execute - should return None
+        result = service.plot_data(data_object)
+
+        assert result is None
+
+        # Execute with save_path - should also return None
+        result_with_path = service.plot_data(data_object, save_path="/tmp/plot.png")
+
+        assert result_with_path is None

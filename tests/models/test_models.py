@@ -548,3 +548,106 @@ class TestInteroperability:
         assert len(record_data["children"]) == 2
         assert record_data["children"][0]["name"] == "inner1.txt"
         assert record_data["children"][1]["name"] == "inner2.txt"
+
+
+class TestEdgeCases:
+    """Test edge cases and less common scenarios."""
+
+    def test_record_add_child_when_children_is_none(self):
+        """Test add_child initializes children list if None."""
+        record_data = {
+            "id": 1,
+            "doi": "10.1234/test",
+            "created": "2023-01-01T12:00:00",
+            "updated": "2023-01-02T12:00:00",
+            "links": {},
+            "metadata": {"title": "Test"},
+            "files": [],
+        }
+        record = Record.model_validate(record_data)
+        # Manually set children to None to test the condition
+        record.children = None
+        file_data = {
+            "key": "test.txt",
+            "links": {"self": "http://example.com/test.txt"},
+        }
+        file = File.model_validate(file_data)
+        record.add_child(file)
+        assert len(record.children) == 1
+
+    def test_record_remove_child_with_empty_children(self):
+        """Test remove_child does nothing when children is empty."""
+        record_data = {
+            "id": 1,
+            "doi": "10.1234/test",
+            "created": "2023-01-01T12:00:00",
+            "updated": "2023-01-02T12:00:00",
+            "links": {},
+            "metadata": {"title": "Test"},
+            "files": [],
+        }
+        record = Record.model_validate(record_data)
+        # Should not raise error
+        record.remove_child("nonexistent.txt")
+        assert len(record.children) == 0
+
+    def test_record_get_child_raises_error_when_no_children(self):
+        """Test get_child raises ValueError when record has no children."""
+        record_data = {
+            "id": 1,
+            "doi": "10.1234/test",
+            "created": "2023-01-01T12:00:00",
+            "updated": "2023-01-02T12:00:00",
+            "links": {},
+            "metadata": {"title": "Test"},
+            "files": [],
+        }
+        record = Record.model_validate(record_data)
+        with pytest.raises(ValueError, match="No children in record"):
+            record.get_child("test.txt")
+
+    def test_record_get_child_raises_error_when_child_not_found(self):
+        """Test get_child raises ValueError when child not found."""
+        record_data = {
+            "id": 1,
+            "doi": "10.1234/test",
+            "created": "2023-01-01T12:00:00",
+            "updated": "2023-01-02T12:00:00",
+            "links": {},
+            "metadata": {"title": "Test"},
+            "files": [
+                {"key": "file1.txt", "links": {"self": "http://example.com/file1.txt"}},
+            ],
+        }
+        record = Record.model_validate(record_data)
+        with pytest.raises(
+            ValueError, match="Child with name nonexistent.txt not found"
+        ):
+            record.get_child("nonexistent.txt")
+
+    def test_file_model_validator_non_dict_input(self):
+        """Test File model_validator when input is not a dict."""
+        # When passing a non-dict object, the validator should return it as-is
+        non_dict_input = "not a dict"
+        from pydantic import ValidationError
+
+        with pytest.raises(ValidationError):
+            file = File.model_validate(non_dict_input)
+
+    def test_record_model_validator_non_dict_input(self):
+        """Test Record model_validator when input is not a dict."""
+        # When passing a non-dict object, the validator should return it as-is
+        non_dict_input = "not a dict"
+        from pydantic import ValidationError
+
+        with pytest.raises(ValidationError):
+            record = Record.model_validate(non_dict_input)
+
+    def test_template_model_validator_non_dict_input(self):
+        """Test Template model_validator when input is not a dict."""
+        # When passing a non-dict object, the validator should return it as-is
+        non_dict_input = "not a dict"
+        from pydantic import ValidationError
+
+        with pytest.raises(ValidationError):
+            template = Template.model_validate(non_dict_input)

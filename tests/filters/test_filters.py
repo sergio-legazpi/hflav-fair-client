@@ -146,6 +146,12 @@ class TestFilterClasses:
 
         assert query == '(title:"test1") OR (title:"test2")'
 
+    def test_or_filter_empty(self):
+        """Test OrFilter returns empty string when no filters."""
+        or_filter = OrFilter()
+        query = or_filter.build_query()
+        assert query == ""
+
     def test_not_filter_build_query(self):
         """Test NotFilter negates filters."""
         filter1 = TextFilter(field="title", value="test")
@@ -154,6 +160,12 @@ class TestFilterClasses:
         query = not_filter.build_query()
 
         assert query == 'NOT (title:"test")'
+
+    def test_not_filter_empty(self):
+        """Test NotFilter returns empty string when no filters."""
+        not_filter = NotFilter()
+        query = not_filter.build_query()
+        assert query == ""
 
     def test_not_filter_multiple_filters(self):
         """Test NotFilter with multiple filters."""

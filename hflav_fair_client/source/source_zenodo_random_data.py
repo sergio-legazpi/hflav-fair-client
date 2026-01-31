@@ -16,7 +16,9 @@ class SourceZenodoRandomData(SourceInterface):
     def __init__(self):
         super().__init__()
         with open(
-            "hflav_fair_client/resources/random_data_schema.schema", "r", encoding="utf-8"
+            "hflav_fair_client/resources/random_data_schema.schema",
+            "r",
+            encoding="utf-8",
         ) as file:
             schema_dict = json.load(file)
         self._schema = schema_dict

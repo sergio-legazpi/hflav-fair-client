@@ -399,3 +399,16 @@ class TestSourceGitlab:
 
             assert "Tag 'feature-branch' not found" in str(exc_info.value)
             project.tags.get.assert_called_once_with("feature-branch")
+
+    def test_search_schema_catches_generic_exception(self, gitlab_client):
+        """Test _search_schema handles generic exceptions and wraps them."""
+        project = gitlab_client.project
+
+        # Make repository_tree raise a generic Exception
+        project.repository_tree.side_effect = Exception("Generic error")
+
+        with pytest.raises(NoSchemaFoundInsideGitlabRepository) as exc_info:
+            gitlab_client._search_schema("")
+
+        assert "No schema found inside the GitLab repository" in str(exc_info.value)
+        assert "Generic error" in str(exc_info.value.details)
