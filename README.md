@@ -28,6 +28,8 @@ And the class structure is as it can be seen in this image:
 
 ![Class diagram](docs/Class_Diagram.png)
 
+The Mermaid code for these diagrams is available in [c4.md](docs/c4.md) and [class_diagram.md](docs/class_diagram.md) respectively.
+
 ## Configuring environment variables
 
 All the environment variables available can be seen in the `EnvironmentVariables` enum inside the [config](hflav_fair_client/config.py) file
