@@ -5,10 +5,8 @@ before_script:
 
 stages:
   - test
-  - integration
-  - performance
 
-test:
+unit_test:
   stage: test
   script:
     - python -m venv .venv
@@ -25,7 +23,7 @@ test:
     when: always
 
 integration:
-  stage: integration
+  stage: test
   script:
     - python -m venv .venv
     - . .venv/bin/activate
@@ -35,7 +33,7 @@ integration:
   allow_failure: true
 
 performance:
-  stage: performance
+  stage: test
   script:
     - python -m venv .venv
     - . .venv/bin/activate

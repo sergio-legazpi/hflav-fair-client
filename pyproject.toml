@@ -45,6 +45,8 @@ test = [
   "pytest-mock>=3.10",
   "pytest-benchmark>=4.0",
   "memory-profiler>=0.61.0",
+  "hypothesis>=6.148.7",
+  "hypothesis-jsonschema>=0.23.1",
 ]
 # Dependencies for development (includes test dependencies)
 # Hypothesis is a possibility to generate random data during development and not depend on the published data
