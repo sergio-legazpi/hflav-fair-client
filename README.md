@@ -91,8 +91,8 @@ data = service.load_local_data_file_from_path(
 # Search within the loaded data
 searcher = HflavDataSearching(data)
 results = searcher.get_data_object_from_key_and_value(
-    object_name="averages",
-    key_name="central",
+    object_name="groups",
+    key_name="ndf",
     operator=SearchOperators.EQUALS,
     value=156,
 )

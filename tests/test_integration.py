@@ -2,10 +2,8 @@ import datetime
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
-from dotenv import load_dotenv
 import pytest
 
-from hflav_fair_client.container import Container
 from hflav_fair_client.filters.search_filters import (
     AndFilter,
     NotFilter,
@@ -13,15 +11,10 @@ from hflav_fair_client.filters.search_filters import (
     QueryBuilder,
     SortOptions,
 )
-from hflav_fair_client.filters.zenodo_query import ZenodoQuery
-from hflav_fair_client.models.hflav_data_searching import HflavDataSearching, SearchOperators
+from hflav_fair_client.services.service import Service
 
-load_dotenv()
 
-# Create container and service ONCE per class, not at module level
-container = Container()
-container.init_resources()
-service = container.service()
+service = Service()
 
 
 class TestIntegration(unittest.TestCase):
@@ -73,13 +66,6 @@ class TestIntegration(unittest.TestCase):
         """Test to verify service initializes correctly"""
         self.assertIsNotNone(service, "Service should not be None")
         # Here you can add more service verifications
-
-    @classmethod
-    def tearDownClass(cls):
-        """Cleanup after all tests"""
-        # If container has cleanup method
-        if hasattr(container, "shutdown_resources"):
-            container.shutdown_resources()
 
 
 if __name__ == "__main__":

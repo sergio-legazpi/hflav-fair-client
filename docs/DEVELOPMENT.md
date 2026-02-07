@@ -51,12 +51,6 @@ To use environment variables in your code:
 
 1. Create a `.env` file in the project root (if not already present)
 2. Add your environment variables
-3. Load them in your Python code:
-   ```python
-   from dotenv import load_dotenv
-   
-   load_dotenv()
-   ```
 
 ### Logging
 
