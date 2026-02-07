@@ -12,7 +12,6 @@ from hflav_fair_client.services.service import (
     Service,
 )
 from hflav_fair_client.source.source_gitlab_client import SourceGitlabClient
-from hflav_fair_client.source.source_zenodo_random_data import SourceZenodoRandomData
 from hflav_fair_client.source.source_zenodo_requests import SourceZenodoRequest
 
 
